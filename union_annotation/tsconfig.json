@@ -1,0 +1,9 @@
+{
+  "js/ts.implicitProjectConfig.checkJs": true,
+  "compilerOptions": {
+    "checkJs": true,
+    "jsx": "react",
+    "outDir": "build/"
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
+}
