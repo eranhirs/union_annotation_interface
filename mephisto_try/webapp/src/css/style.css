@@ -1,0 +1,86 @@
+/* Put spaces around highlight-within-text-area-container */ 
+.highlight-within-text-area-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+ }
+
+ .start-hit-button {
+     margin-top: 10px;
+ }
+
+ .actual-task {
+     margin-top: 10px;
+ }
+
+ .step-button {
+    margin-right: 10px;
+ }
+
+.step-back-button {
+    text-align: center;
+}
+
+ .submit-button {
+     float: right;
+ }
+
+ /* Align radiobox to be closer to the sentence */
+ .sentence-radiobox {
+    margin-top: 20%;
+ }
+
+
+ /* Put steps-btn-group in the middle of page */
+ .steps-btn-group {
+     margin-left: 50%;
+ }
+
+ /* Put border around highlight-within-text-area editors */ 
+ .highlight-within-text-area-container {
+    border: 1px #767676 solid;
+    padding: 5px;
+ }
+ 
+  /* Disabled functionality for the highlighter class */
+  .sentence .highlight-within-text-area-container.disabled {
+    background-color: #f8f8f8;
+    border-color: #d4d4d4;
+    color: #545454;
+    cursor: no-drop;
+  }
+
+ /* Highlight cursor */
+ .sentence .input-group.highlight {
+    cursor: copy;
+}
+
+ /* Removing padding that causes higlighting part of a word create spaces */
+ mark.yellow {
+     padding: 0;
+     color: inherit;
+ }
+
+ /* Put space above highlight-classification-list-group */
+ .highlight-classification-list-group {
+     margin-top: 10px;
+ }
+
+ /* Add clickable cursor on sentences hover */
+ .clickable {
+    cursor: pointer;
+ }
+
+ /* Highlight chosen sentence */
+ .sentence.chosen {
+    background-color: #fcf8e3;
+ }
+
+ /* If textbox is empty, we can't edit because it doesn't know we are clicking it. Also, only clicking on direct text works. This is here to enable clicking anywhere in the textbox. See also https://draftjs.org/docs/advanced-topics-managing-focus */
+ .DraftEditor-root {
+     width: 100%;
+ }
+
+ /* Style text inputs */
+ .merge-sentences-step textarea {
+    width: 100%;
+ }
