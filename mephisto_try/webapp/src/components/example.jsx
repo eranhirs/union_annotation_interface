@@ -32,7 +32,7 @@ function Example({ exampleId, exampleData }) {
                         <ListGroupItem currStep={step} step={"1"} itemId={`${exampleId}_1`} onClick={setStep} />
                         <ListGroupItem currStep={step} step={"2"} itemId={`${exampleId}_2`} onClick={setStep} />
                         <ListGroupItem currStep={step} step={"3"} itemId={`${exampleId}_3`} onClick={setStep} />
-                        <ListGroupItem currStep={step} step={"4"} itemId={`${exampleId}_4`} onClick={setStep} />
+                        {step4Extra != null && <ListGroupItem currStep={step} step={"4"} itemId={`${exampleId}_4`} onClick={setStep} />}
                     </div>
                 </div>
                 <div className="col-8">
@@ -48,11 +48,11 @@ function Example({ exampleId, exampleData }) {
                             {highlightPhrasesStepInstruction}
                             <br /><br />{step3Extra}
                         </ListItem>
-                        <ListItem currStep={step} step={"4"} itemId={`${exampleId}_4`}>
+                        {step4Extra != null && <ListItem currStep={step} step={"4"} itemId={`${exampleId}_4`}>
                             {mergeSentencesStepInstruction}
 
                             <br /><br />{step4Extra}
-                        </ListItem>
+                        </ListItem>}
                     </div>
                 </div>
             </div>

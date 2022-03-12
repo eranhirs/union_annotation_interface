@@ -7,6 +7,7 @@ import { useMephistoTask, ErrorBoundary } from "mephisto-task";
 import { Instructions } from "./components/instructions.jsx";
 import { Task } from "./components/task.jsx";
 import { examples } from "./examples.jsx";
+import { shortDescription } from "./components/texts.jsx";
 
 /* ================= Application Components ================= */
 
@@ -36,8 +37,7 @@ function MainApp() {
       <section className="hero is-medium is-link">
         <div class="hero-body">
           <div className="title is-3">
-              In this task you will merge the information of two sentences into one sentence. <br />
-              More specifically, all of the information conveyed in each sentence should appear in the merged sentence.
+              {shortDescription}
           </div>
         </div>
       </section>

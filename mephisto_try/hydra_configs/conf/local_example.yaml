@@ -13,7 +13,7 @@ mephisto:
     link_task_source: true
   task:
     task_name: union-annotation-task
-    task_title: "Merging two sentences into one complete sentence"
-    task_description: "In this task you will merge the information of two sentences into one sentence. More specifically, all of the information conveyed in each sentence should appear in the merged sentence."
-    task_reward: 0.05
+    task_title: "Merge two sentences into one complete sentence"
+    task_description: "In this task, you will highlight the differences between two sentences and merge them into one sentence. More specifically, all of the information conveyed in each sentence should appear in the merged sentence."
+    task_reward: 0.5
     task_tags: "nlp,language,fusion"

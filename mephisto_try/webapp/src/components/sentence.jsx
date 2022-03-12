@@ -13,7 +13,7 @@ const Sentence = ({ title, text, setText = null, chosenSentence = false, disable
             }
         }
 
-        if (highlight) {
+        if (highlight && !isExample) {
             // Handle bug where selection is not deleted
             if (!selection || selection.start != newSelection.start || selection.end != newSelection.end) {
                 setSelection(newSelection);
@@ -33,7 +33,7 @@ const Sentence = ({ title, text, setText = null, chosenSentence = false, disable
 
     const inputRef = useRef(null);
     const highlightAll = { "highlight": /./gi, "className": "yellow" };
-    const highlightSpecific = highlightedPhrases.map(function (object, i) { return { "highlight": object, "className": "yellow" } })
+    const highlightSpecific = highlightedPhrases.map(function (object, i) { return { "highlight": object['phrase'], "className": "yellow" } })
 
     return (
         <section className={`sentence ${onClick != null ? "clickable " : " "}`}>

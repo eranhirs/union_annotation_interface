@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction } from './texts.jsx';
+import { readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, contradictingInformationDescription, newInformationDescription, entailmentDescription, entailingInformationDescription } from './texts.jsx';
 import { Sentence } from './sentence.jsx'
 import { Directions } from "./core_components.jsx";
 
@@ -110,19 +110,19 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, 
                             <div className="d-flex w-100 justify-content-between">
                             <h5 className="mb-1">New Information</h5>
                             </div>
-                            <p className="mb-1">Information conveyed in this sentence and not in the previous sentence (adds to text).</p>
+                            <p className="mb-1">{newInformationDescription}</p>
                         </a>
                         <a href="#" className="list-group-item list-group-item-action" data-bs-dismiss="modal" onClick={() => highlightPhrase(highlightCandidate, "entailing")}>
                             <div className="d-flex w-100 justify-content-between">
                             <h5 className="mb-1">Entailing Information</h5>
                             </div>
-                            <p className="mb-1">Information that is more specific / less specific than the previous sentence (replaces previous text).</p>
+                            <p className="mb-1">{entailingInformationDescription}</p>
                         </a>
                         <a href="#" className="list-group-item list-group-item-action" data-bs-dismiss="modal" onClick={() => highlightPhrase(highlightCandidate, "contradicting")}>
                             <div className="d-flex w-100 justify-content-between">
                             <h5 className="mb-1">Contradicting Information</h5>
                             </div>
-                            <p className="mb-1">Information that contradicts the information conveyed in the previous sentence.</p>
+                            <p className="mb-1">{contradictingInformationDescription}</p>
                             <small className="text-muted">Choosing this will automatically complete the HIT, because we would like to skip examples with contradicting information.</small>
                         </a>
                     </div>
@@ -156,8 +156,8 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, 
 function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPhrases, chosenSentenceId, feedbackText, setFeedbackText, isExample = false }) {
     const { sentence1Text, sentence2Text } = taskData;
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} chosenSentence={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} chosenSentence={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} chosenSentence={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} highlight={true} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} chosenSentence={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} highlight={true} />
 
     const mergedSentenceComponent = <section>
         <h5 className="card-title">Merged sentence</h5>

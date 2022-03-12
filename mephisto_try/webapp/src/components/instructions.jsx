@@ -1,48 +1,76 @@
 import React, { useState } from 'react';
 import { Directions } from "./core_components.jsx";
 import { Example } from './example.jsx';
+import { contradictingInformationDescription, elaboratedDescription, entailingInformationDescription, newInformationDescription, shortDescription } from './texts.jsx';
 
-function Instructions({ examples }) {  
-  
-    return (
-      <div>
-        <section className="section">
-          <div className="container">
-            <div className="row">
-              <div className="col-12">
-                <Directions title="Instructions">
-                  In this task you will merge the information of two sentences into one sentence. <br />
-                  More specifically, all of the information conveyed in each sentence should appear in the merged sentence.
-                </Directions>
+
+function ExamplesAccordion({ examples, accordionId }) {
+  return (
+    <div className="accordion" id="accordionFlushExample">
+      {
+        examples.map(function (object, i) {
+          const uniqueExampleId = `${accordionId}-${i}`
+
+          return <div className="accordion-item">
+            <h2 className="accordion-header" id={`flush-heading-${uniqueExampleId}`}>
+              <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-collapse-${uniqueExampleId}`} aria-expanded="false" aria-controls={`flush-collapse-${uniqueExampleId}`}>
+                Click here to view {object['exampleTitle'].toLowerCase()}
+              </button>
+            </h2>
+            <div id={`flush-collapse-${uniqueExampleId}`} className="accordion-collapse collapse" aria-labelledby={`flush-heading-${uniqueExampleId}`} data-bs-parent="#accordionFlushExample">
+              <div className="accordion-body">
+                <Example exampleId={String(i)} exampleData={object} />
               </div>
             </div>
-            
-            <div className="row">
-                <div className="col-12">
-                    <div className="accordion" id="accordionFlushExample">
-                        {
-                            examples.map(function(object, i) {
-                                return <div className="accordion-item">
-                                    <h2 className="accordion-header" id={`flush-heading${i}`}>
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-collapse${i}`} aria-expanded="false" aria-controls={`flush-collapse${i}`}>
-                                            {object['exampleTitle']}
-                                        </button>
-                                    </h2>
-                                    <div id={`flush-collapse${i}`} className="accordion-collapse collapse" aria-labelledby={`flush-heading${i}`} data-bs-parent="#accordionFlushExample">
-                                        <div className="accordion-body">
-                                            <Example exampleId={String(i)} exampleData={object} />
-                                        </div>
-                                    </div>
-                                </div>
-                            })
-                        }
-                    </div>
-                </div>
+          </div>
+        })
+      }
+    </div>
+  )
+}
+
+function Instructions({ examples }) {
+
+  return (
+    <div>
+      <section className="section">
+        <div className="container">
+          <div className="row">
+            <div className="col-12">
+              <Directions title="Instructions">
+                {shortDescription}
+              </Directions>
+            </div>
+
+            <div className="col-12">
+              <ExamplesAccordion examples={[examples[0]]} accordionId={1} />
+            </div>
+
+            <div className="col-12">
+              <Directions title="">
+                {elaboratedDescription}
+                <dl className="row">
+                  <dt className="col-sm-3">* New information:</dt>
+                  <dd className="col-sm-9">{newInformationDescription}</dd>
+
+                  <dt className="col-sm-3">* Entailing information:</dt>
+                  <dd className="col-sm-9">{entailingInformationDescription}</dd>
+
+                  <dt className="col-sm-3">* Contradicting information:</dt>
+                  <dd className="col-sm-9">{contradictingInformationDescription}</dd>
+                </dl>
+              </Directions>
+
+              <div className="col-12">
+                <ExamplesAccordion examples={[examples[1], examples[2]]} accordionId={2} />
+              </div>
             </div>
           </div>
-        </section>
-      </div>
-    );
-  }
-  
+
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export { Instructions };

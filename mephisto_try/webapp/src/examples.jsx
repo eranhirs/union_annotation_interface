@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
+import { ExampleData } from './models.jsx';
 
 // Example 1
-const exampleTitle = "Simple example"
-const sentence1Text = "After scooping up jewelry and watches estimated to be worth 2 million euros the thieves reversed their car out of the store and set fire to it before making off in another vehicle."
-const sentence2Text = "Robbers crash 4x4 into store , grabbing jewelry and watches , before setting car ablaze."
-const chosenSentenceId = 1
-const highlightedPhrases = ["crash 4x4 into store"]
-const mergedSentenceText = "After crashing 4x4 into store and scooping up jewelry and watches estimated to be worth 2 million euros the thieves reversed their car out of the store and set fire to it before making off in another vehicle."
-const step2Extra = "In this example, we chose Sentence 1."
-const step3Extra = <section> In this example:
+const example1Step3Extra = <section> In this example:
     <dl className="row">
         <dt className="col-sm-3">* "Robbers"</dt>
         <dd className="col-sm-9">Conveys the same information as "thieves" in sentence 1, do not highlight.</dd>
@@ -20,35 +14,76 @@ const step3Extra = <section> In this example:
         <dd className="col-sm-9">Conveys exactly the same information as sentence 1, do not highlight.</dd>
     </dl>
 </section>
-const step4Extra = <section>In this example, we add "crash 4x4 into store". Note how we slightly rephrased "crashed" to "crashing". Rephrasing is allowed if necessary.</section>
 
-class ExampleData {
-    constructor(exampleTitle, sentence1Text, sentence2Text, chosenSentenceId, highlightedPhrases, mergedSentenceText, step2Extra, step3Extra, step4Extra) {
-        this.exampleTitle = exampleTitle;
-        this.sentence1Text = sentence1Text;
-        this.sentence2Text = sentence2Text;
-        this.chosenSentenceId = chosenSentenceId;
-        this.highlightedPhrases = highlightedPhrases;
-        this.mergedSentenceText = mergedSentenceText;
-        this.step2Extra = step2Extra;
-        this.step3Extra = step3Extra;
-        this.step4Extra = step4Extra;
-    }
-}
 
-const example1 = new ExampleData(exampleTitle, sentence1Text, sentence2Text, chosenSentenceId, highlightedPhrases, mergedSentenceText, step2Extra, step3Extra, step4Extra);
+const example1 = new ExampleData(
+    "a simple example",
+    "After scooping up jewelry and watches estimated to be worth 2 million euros the thieves reversed their car out of the store and set fire to it before making off in another vehicle.",
+    "Robbers crash 4x4 into store , grabbing jewelry and watches , before setting car ablaze.",
+    1,
+    [{ "phrase": "crash 4x4 into store" }],
+    "After crashing 4x4 into store and scooping up jewelry and watches estimated to be worth 2 million euros the thieves reversed their car out of the store and set fire to it before making off in another vehicle.",
+    "In this example, we chose Sentence 1.",
+    example1Step3Extra,
+    'In this example, we add "crash 4x4 into store". Note how we slightly rephrased "crash" to "crashing". Rephrasing is allowed if necessary.'
+);
 
-const exampleTitle2 = "Example #2 - Entailment example";
-const example2 = new ExampleData(exampleTitle2, sentence1Text, sentence2Text, chosenSentenceId, highlightedPhrases, mergedSentenceText, step2Extra, step3Extra, step4Extra);
+// Example 2
 
-const exampleTitle3 = "Example #3 - Contradiction example";
-const example3 = new ExampleData(exampleTitle3, sentence1Text, sentence2Text, chosenSentenceId, highlightedPhrases, mergedSentenceText, step2Extra, step3Extra, step4Extra);
+const example2Step3Extra = <section> In this example:
+    <dl className="row">
+        <dt className="col-sm-3">* "H-P announced Tuesday that it will buy"</dt>
+        <dd className="col-sm-9">Conveys the same information as sentence 1, do not highlight.</dd>
+
+        <dt className="col-sm-3">* "the outsourcing services company"</dt>
+        <dd className="col-sm-9">New information, do highlight.</dd>
+
+
+        <dt className="col-sm-3">* "for $ 13.9 billion"</dt>
+        <dd className="col-sm-9">Entailing information, because $ 13.9 billion is more specific than nearly $ 14 billion, do highlight.</dd>
+    </dl>
+</section>
+
+
+const example2 = new ExampleData(
+    "an entailment example",
+    "H-P announced Tuesday that it will buy the outsourcing services company for $ 13.9 billion .",
+    "Earlier this month Hewlett-Packard unveiled a bid of nearly $ 14 billion to purchase EDS .",
+    2,
+    [{ "phrase": "$ 13.9 billion" }, { "phrase": "the outsourcing services company" }],
+    "Earlier this month Hewlett-Packard unveiled a bid of $ 13.9 billion to purchase EDS , the outsourcing services company .",
+    "In this example, we chose Sentence 2.",
+    example2Step3Extra,
+    'In this example, we replace "nearly $ 14 billion" with "$ 13.9 billion". Also, we add "the outsourcing services company".'
+);
+
+// Example 3
+
+const example3Step3Extra = <section> In this example:
+    <dl className="row">
+        <dt className="col-sm-3">* "of 13"</dt>
+        <dd className="col-sm-9">This phrase contradicts with the "of 12" phrase in the other sentence. Such contradicting examples will automatically end the task, so there is no need to continue further.</dd>
+    </dl>
+</section>
+
+
+const example3 = new ExampleData(
+    "a contradiction example",
+    "Video of Brooklyn Mother of 13 Zurana Horton shot and killed in a gang shooting was revealed Thursday .",
+    "A shocking video released for the first time Thursday captures the moment a Brooklyn mother of 12 was killed in a gang shootout as she picked her daughter up from school .",
+    2,
+    [{ "phrase": "of 13" }],
+    null,
+    "In this example, we chose Sentence 2.",
+    example3Step3Extra,
+    null
+);
 
 
 const examples = [
     example1,
-    // example2,
-    // example3
+    example2,
+    example3
 ]
 
 export { examples };
