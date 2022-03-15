@@ -32,7 +32,13 @@ const example1 = new ExampleData(
 
 const example2Step3Extra = <section> In this example:
     <dl className="row">
-        <dt className="col-sm-3">* "H-P announced Tuesday that it will buy"</dt>
+        <dt className="col-sm-3">* "H-P announced"</dt>
+        <dd className="col-sm-9">Conveys the same information as sentence 1, do not highlight.</dd>
+
+        <dt className="col-sm-3">* "Tuesday"</dt>
+        <dd className="col-sm-9">New information, do highlight.</dd>
+
+        <dt className="col-sm-3">* "that it will buy"</dt>
         <dd className="col-sm-9">Conveys the same information as sentence 1, do not highlight.</dd>
 
         <dt className="col-sm-3">* "the outsourcing services company"</dt>
@@ -50,11 +56,11 @@ const example2 = new ExampleData(
     "H-P announced Tuesday that it will buy the outsourcing services company for $ 13.9 billion .",
     "Earlier this month Hewlett-Packard unveiled a bid of nearly $ 14 billion to purchase EDS .",
     2,
-    [{ "phrase": "$ 13.9 billion" }, { "phrase": "the outsourcing services company" }],
-    "Earlier this month Hewlett-Packard unveiled a bid of $ 13.9 billion to purchase EDS , the outsourcing services company .",
+    [{ "phrase": "Tuesday" }, { "phrase": "$ 13.9 billion" }, { "phrase": "the outsourcing services company" }],
+    "Earlier this month, on Tuesday, Hewlett-Packard unveiled a bid of $ 13.9 billion to purchase EDS , the outsourcing services company .",
     "In this example, we chose Sentence 2.",
     example2Step3Extra,
-    'In this example, we replace "nearly $ 14 billion" with "$ 13.9 billion". Also, we add "the outsourcing services company".'
+    'In this example, we replace "nearly $ 14 billion" with "$ 13.9 billion". Also, we add "Tuesday" and "the outsourcing services company".'
 );
 
 // Example 3

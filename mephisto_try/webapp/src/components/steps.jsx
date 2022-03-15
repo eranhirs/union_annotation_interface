@@ -91,8 +91,12 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, 
         }
     }
 
-    const highlightedPhrasesListComponent = highlightedPhrases.length > 0 && <section>Highlighted phrases: {highlightedPhrases.map(function(object, i) {
-            return <mark className="yellow">{object['phrase']}</mark>
+    function removeHighlightedPhrase(highlightedPhraseObject) {
+        setHighlightedPhrases(highlightedPhrases.filter(object => object != highlightedPhraseObject))
+    }
+
+    const highlightedPhrasesListComponent = <section>Highlighted phrases: {highlightedPhrases.length > 0 && highlightedPhrases.map(function(object, i) {
+            return <mark className="yellow highlighted-phrase-list-component" onClick={() => removeHighlightedPhrase(object)}>{object['phrase']}</mark>
         }).reduce((prev, curr) => [prev, ", ", curr])}</section>
 
 
@@ -156,8 +160,8 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, 
 function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPhrases, chosenSentenceId, feedbackText, setFeedbackText, isExample = false }) {
     const { sentence1Text, sentence2Text } = taskData;
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} chosenSentence={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} highlight={true} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} chosenSentence={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} highlight={true} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} chosenSentence={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} chosenSentence={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} />
 
     const mergedSentenceComponent = <section>
         <h5 className="card-title">Merged sentence</h5>

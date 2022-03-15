@@ -24,9 +24,9 @@
      float: right;
  }
 
- /* Align radiobox to be closer to the sentence */
- .sentence-radiobox {
-    margin-top: 20%;
+ /* Space before sentence */
+ .sentence {
+     margin-top: 10px;
  }
 
 
@@ -83,4 +83,10 @@
  /* Style text inputs */
  .merge-sentences-step textarea {
     width: 100%;
+ }
+
+ /* Delete highlighted phrase UI */
+ .highlighted-phrase-list-component:hover {
+     background-color: #f4afaf;
+     cursor: pointer;
  }
