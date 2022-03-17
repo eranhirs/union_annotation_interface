@@ -1,13 +1,18 @@
 import json
 import os
 import re
+import pandas as pd
 
 import boto3
 import requests
 from boto.mturk.question import HTMLQuestion
 import subprocess
 
+MAX_ASSIGNMENTS = int(os.getenv("MAX_ASSIGNMENTS", 2))
+LIFETIME_IN_SECONDS = int(os.getenv("LIFETIME_IN_SECONDS", 60))
+ASSIGNMENT_DURATION_IN_SECONDS = int(os.getenv("ASSIGNMENT_DURATION_IN_SECONDS", 60 * 10))
 SERVER_URL = os.getenv("SERVER_URL")
+
 
 def create_client():
     return boto3.client(
@@ -20,9 +25,8 @@ def create_client():
 
 def build_on_remote_server():
     # run build remotely
-    # subprocess.run(['ssh', 'hirsche5@nlp.lnx.biu.ac.il', '"ls ~/union_annotation_interface/union_annotation"'])
     subprocess.Popen(
-        f"ssh {os.getenv('SERVER_HOST')} 'cd {os.getenv('SERVER_PATH')} && git pull origin main && npm run build'",
+        f"ssh {os.getenv('SERVER_HOST')} 'cd {os.getenv('SERVER_PATH')} && git pull origin main && npm install && npm run build'",
         shell=True).communicate()
 
     # find build file name
@@ -33,9 +37,9 @@ def build_on_remote_server():
     return js_build_file_name
 
 
-def build_locally():
+def build_locally(force_build=False):
     # build index if doesn't exist
-    if not os.path.exists("../build/index.html"):
+    if not os.path.exists("../build/index.html") or force_build:
         subprocess.run(['npm', 'run', 'build'])
 
     # read build index
@@ -53,10 +57,9 @@ def inject_remote(index_html, js_build_file_name):
     return index_html
 
 
-def inject_data(index_html):
+def inject_data(index_html, datapoint):
     # inject data into HTML
-    data = {"name": "blah"}
-    index_html = index_html.replace("<data_placeholder>", json.dumps(data))
+    index_html = index_html.replace("<data_placeholder>", json.dumps(datapoint))
 
     return index_html
 
@@ -75,13 +78,13 @@ def publish_hit(index_html):
     # reward is what Workers will be paid when you approve their work
     # Check out the documentation on CreateHIT for more details
     response = mtc.create_hit(Question=html_question.get_as_xml(),
-                              MaxAssignments=1,
-                              Title="Answer a simple question",
-                              Description="Help research a topic",
-                              Keywords="question, answer, research",
+                              MaxAssignments=MAX_ASSIGNMENTS,
+                              Title="Merge two sentences into one complete sentence",
+                              Description="In this task, you will highlight the differences between two sentences and merge them into one sentence. More specifically, all of the information conveyed in each sentence should appear in the merged sentence.",
+                              Keywords="nlp,language,fusion",
                               Reward="0.5",
-                              LifetimeInSeconds=60,
-                              AssignmentDurationInSeconds=60
+                              LifetimeInSeconds=LIFETIME_IN_SECONDS,
+                              AssignmentDurationInSeconds=ASSIGNMENT_DURATION_IN_SECONDS
                               )
 
     # The response included several fields that will be helpful later
@@ -92,9 +95,17 @@ def publish_hit(index_html):
     print("Your HIT ID is: {}".format(hit_id))
 
 
+def read_data():
+    df = pd.read_csv("../../data/task_data_sample.csv")
+
+    for datapoint in df.to_dict("records"):
+        yield datapoint
+
+
 mtc = create_client()
-index_html = build_locally()
+index_html = build_locally(force_build=False)
 js_build_file_name = build_on_remote_server()
 index_html = inject_remote(index_html, js_build_file_name)
-index_html = inject_data(index_html)
-publish_hit(index_html)
+for datapoint in read_data():
+    injected_index_html = inject_data(index_html, datapoint)
+    publish_hit(injected_index_html)
