@@ -13,11 +13,13 @@ function MTurkComponent({ defaultTaskData, children }) {
         if (isPreview) {
             alert("ERROR - you need to first accept the hit to submit it")
         } else {
-            // Based on https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit
             const form = document.createElement("form")
             form.method = "POST";
             form.action = `${turkSubmitTo}/mturk/externalSubmit`
+            data['workerId'] = workerId
+            data['assignmentId'] = assignmentID
             for (const key in data) {
+                // Based on https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit
                 const hiddenField = document.createElement("input")
                 hiddenField.type = "hidden";
                 hiddenField.name = key;
