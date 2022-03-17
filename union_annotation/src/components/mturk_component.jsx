@@ -6,7 +6,7 @@ function MTurkComponent({ defaultTaskData, children }) {
     const childrenWithMturkProps = React.cloneElement(children, { taskData: taskData, onSubmit: onSubmit })
     const assignmentID = window.turkGetParam('assignmentId', "");
     const workerId = window.turkGetParam('workerId', "");
-    const turkSubmitTo = window.turkGetParam('turkSubmitTo', "");    
+    const turkSubmitTo = decodeURIComponent(window.turkGetParam('turkSubmitTo', ""));
     const isPreview = assignmentID === "ASSIGNMENT_ID_NOT_AVAILABLE"
 
     function onSubmit(data) {

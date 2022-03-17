@@ -15,6 +15,8 @@ SERVER_URL = os.getenv("SERVER_URL")
 
 
 def create_client():
+    print("Creating client")
+
     return boto3.client(
         'mturk',
         endpoint_url='https://mturk-requester-sandbox.us-east-1.amazonaws.com',
@@ -24,20 +26,37 @@ def create_client():
 
 
 def build_on_remote_server():
+    """
+    Build remotely because mturk only hosts the html file
+    """
+
+    print("Building on remote server")
+
     # run build remotely
     subprocess.Popen(
         f"ssh {os.getenv('SERVER_HOST')} 'cd {os.getenv('SERVER_PATH')} && git pull origin main && npm install && npm run build'",
         shell=True).communicate()
 
     # find build file name
-    build_files = requests.get(f"{SERVER_URL}/static/js/").json()
-    js_build_file_name = [build_file['name'] for build_file in build_files if
+    remote_file_names = {}
+    js_build_files = requests.get(f"{SERVER_URL}/static/js/").json()
+    remote_file_names['js'] = [build_file['name'] for build_file in js_build_files if
                           build_file['name'].startswith('main') and build_file['name'].endswith('.js')][0]
 
-    return js_build_file_name
+    css_build_files = requests.get(f"{SERVER_URL}/static/css/").json()
+    remote_file_names['css'] = [build_file['name'] for build_file in css_build_files if
+                          build_file['name'].startswith('main') and build_file['name'].endswith('.css')][0]
+
+    return remote_file_names
 
 
 def build_locally(force_build=False):
+    """
+    Build locally only for the compiled HTML file (which is uploaded to mturk), so it is not necessary every time
+    """
+
+    print("Building locally")
+
     # build index if doesn't exist
     if not os.path.exists("../build/index.html") or force_build:
         subprocess.run(['npm', 'run', 'build'])
@@ -49,15 +68,23 @@ def build_locally(force_build=False):
     return index_html
 
 
-def inject_remote(index_html, js_build_file_name):
+def inject_remote(index_html, remote_file_names):
+    print("Injecting remote")
+
     # replace js name in HTML
-    index_html = re.sub(re.compile("/static/js/main\..*?\.js"), f"{SERVER_URL}/static/js/{js_build_file_name}",
+    index_html = re.sub(re.compile("/static/js/main\..*?\.js"), f"{SERVER_URL}/static/js/{remote_file_names['js']}",
+                        index_html)
+
+    # replace css name in HTML
+    index_html = re.sub(re.compile("/static/css/main\..*?\.css"), f"{SERVER_URL}/static/css/{remote_file_names['css']}",
                         index_html)
 
     return index_html
 
 
 def inject_data(index_html, datapoint):
+    print("Injecting data")
+
     # inject data into HTML
     index_html = index_html.replace("<data_placeholder>", json.dumps(datapoint))
 
@@ -65,10 +92,12 @@ def inject_data(index_html, datapoint):
 
 
 def publish_hit(index_html):
+    print("Publishing hit")
+
     # The first parameter is the HTML content
     # The second is the height of the frame it will be shown in
     # Check out the documentation on HTMLQuestion for more details
-    html_question = HTMLQuestion(index_html, 500)
+    html_question = HTMLQuestion(index_html, 800)
 
     # These parameters define the HIT that will be created
     # question is what we defined above
@@ -104,8 +133,8 @@ def read_data():
 
 mtc = create_client()
 index_html = build_locally(force_build=False)
-js_build_file_name = build_on_remote_server()
-index_html = inject_remote(index_html, js_build_file_name)
+remote_file_names = build_on_remote_server()
+index_html = inject_remote(index_html, remote_file_names)
 for datapoint in read_data():
     injected_index_html = inject_data(index_html, datapoint)
     publish_hit(injected_index_html)
