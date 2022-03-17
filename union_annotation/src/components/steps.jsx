@@ -47,16 +47,9 @@ function ChooseSentenceStep({ taskData, setStep, setAllowedStep, chosenSentenceI
                     {chooseSentenceStepInstruction}
                 </Directions>
             </div>}
-            {/* <div className="col-md-1">
-                {<input className="form-check-input sentence-radiobox" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onClick={() => chooseSentence(1)} checked={chosenSentenceId == 1} />}
-                <button type="button" className="btn btn-primary step-button sentence-radiobox" onClick={() => chooseSentence(1)}>Choose 1</button>
-            </div>*/}
             <div className="col-md-12">
                 {sentence1}
             </div>
-            {/* <div className="col-md-1">
-                <button type="button" className="btn btn-primary step-button sentence-radiobox" onClick={() => chooseSentence(2)}>Choose 2</button>
-            </div> */}
             <div className="col-md-12">
                 {sentence2}
             </div>

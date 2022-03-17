@@ -3,6 +3,7 @@ import { Instructions } from "./instructions.jsx";
 import { examples } from "./../examples.jsx";
 import { SubmissionData } from '../models.jsx';
 import { ChooseSentenceStep, HighlightPhrasesStep, MergeSentencesStep, ReadSentencesStep } from './steps.jsx';
+import { Modal } from 'bootstrap';
 
 
 function Task({ taskData, isOnboarding, onSubmit, onError }) {
@@ -37,7 +38,7 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
 
     useEffect(() => {
         if (myModal == null) {
-            var myModal = new bootstrap.Modal(modalRef.current)
+            var myModal = new Modal(modalRef.current)
             setSubmitValidationModal(myModal);
         }
     }, [])
