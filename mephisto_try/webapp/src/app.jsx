@@ -34,13 +34,7 @@ function MainApp() {
   }
   if (isPreview) {
     return (
-      <section className="hero is-medium is-link">
-        <div class="hero-body">
-          <div className="title is-3">
-              {shortDescription}
-          </div>
-        </div>
-      </section>
+      <Instructions examples={examples}></Instructions>
     );
   }
   if (isLoading || !initialTaskData) {
