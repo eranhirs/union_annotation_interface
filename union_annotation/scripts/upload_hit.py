@@ -1,6 +1,8 @@
 import json
 import os
 import re
+from typing import Dict
+
 import pandas as pd
 
 import boto3
@@ -25,7 +27,7 @@ def create_client():
     )
 
 
-def build_on_remote_server():
+def build_on_remote_server() -> None:
     """
     Build remotely because mturk only hosts the html file
     """
@@ -37,6 +39,8 @@ def build_on_remote_server():
         f"ssh {os.getenv('SERVER_HOST')} 'cd {os.getenv('SERVER_PATH')} && git pull origin main && npm install && npm run build'",
         shell=True).communicate()
 
+
+def get_remote_file_names() -> Dict[str, str]:
     # find build file name
     remote_file_names = {}
     js_build_files = requests.get(f"{SERVER_URL}/static/js/").json()
@@ -71,13 +75,18 @@ def build_locally(force_build=False):
 def inject_remote(index_html, remote_file_names):
     print("Injecting remote")
 
-    # replace js name in HTML
-    index_html = re.sub(re.compile("/static/js/main\..*?\.js"), f"{SERVER_URL}/static/js/{remote_file_names['js']}",
+    # replace js name in HTML (not putting inline because mturk has a size limit)
+    js_url = f"{SERVER_URL}/static/js/{remote_file_names['js']}"
+    index_html = re.sub(re.compile("/static/js/main\..*?\.js"), js_url,
                         index_html)
 
-    # replace css name in HTML
-    index_html = re.sub(re.compile("/static/css/main\..*?\.css"), f"{SERVER_URL}/static/css/{remote_file_names['css']}",
-                        index_html)
+    # put css inline in HTML (didn't work when fetching from server)
+    css_url = f"{SERVER_URL}/static/css/{remote_file_names['css']}"
+    response = requests.get(css_url)
+    css = response.text
+    index_html = index_html.replace("</head>", f"<style>{css}</style></head>")
+    # index_html = re.sub(re.compile("/static/css/main\..*?\.css"), css_url,
+    #                     index_html)
 
     return index_html
 
@@ -133,7 +142,8 @@ def read_data():
 
 mtc = create_client()
 index_html = build_locally(force_build=False)
-remote_file_names = build_on_remote_server()
+build_on_remote_server()
+remote_file_names = get_remote_file_names()
 index_html = inject_remote(index_html, remote_file_names)
 for datapoint in read_data():
     injected_index_html = inject_data(index_html, datapoint)
