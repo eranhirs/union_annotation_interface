@@ -11,7 +11,7 @@ function MTurkComponent({ defaultTaskData, children }) {
 
     function onSubmit(data) {
         if (isPreview) {
-            alert("ERROR - you need to first accept the hit to submit it")
+            alert("ERROR - you need to accept the hit before you submit it")
         } else {
             const form = document.createElement("form")
             form.method = "POST";
@@ -30,8 +30,6 @@ function MTurkComponent({ defaultTaskData, children }) {
             document.body.appendChild(form);
             HTMLFormElement.prototype.submit.call(form);
             document.body.removeChild(form);            
-              
-            alert(JSON.stringify(data))
         }
     }
 
