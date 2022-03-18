@@ -35,7 +35,7 @@ function MTurkComponent({ defaultTaskData, children }) {
     }
 
     return (
-        {childrenWithMturkProps}
+        <section>{childrenWithMturkProps}</section>
     )
 }
 
