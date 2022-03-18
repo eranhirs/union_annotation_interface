@@ -27,7 +27,9 @@ function MTurkComponent({ defaultTaskData, children }) {
                 hiddenField.value = JSON.stringify(data[key]);
                 form.appendChild(hiddenField);
             }
+            document.body.appendChild(form);
             HTMLFormElement.prototype.submit.call(form);
+            document.body.removeChild(form);            
               
             alert(JSON.stringify(data))
         }
