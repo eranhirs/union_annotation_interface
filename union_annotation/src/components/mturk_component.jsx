@@ -4,10 +4,10 @@ function MTurkComponent({ defaultTaskData, children }) {
     const taskData = window.taskData !== undefined ? window.taskData : defaultTaskData;
 
     const childrenWithMturkProps = React.cloneElement(children, { taskData: taskData, onSubmit: onSubmit })
-    const assignmentID = window.turkGetParam('assignmentId', "");
+    const assignmentId = window.turkGetParam('assignmentId', "");
     const workerId = window.turkGetParam('workerId', "");
     const turkSubmitTo = decodeURIComponent(window.turkGetParam('turkSubmitTo', ""));
-    const isPreview = assignmentID === "ASSIGNMENT_ID_NOT_AVAILABLE"
+    const isPreview = assignmentId === "ASSIGNMENT_ID_NOT_AVAILABLE"
 
     function onSubmit(data) {
         if (isPreview) {
@@ -17,7 +17,7 @@ function MTurkComponent({ defaultTaskData, children }) {
             form.method = "POST";
             form.action = `${turkSubmitTo}/mturk/externalSubmit`
             data['workerId'] = workerId
-            data['assignmentId'] = assignmentID
+            data['assignmentId'] = assignmentId
             for (const key in data) {
                 // Based on https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit
                 const hiddenField = document.createElement("input")
@@ -28,8 +28,6 @@ function MTurkComponent({ defaultTaskData, children }) {
                 form.appendChild(hiddenField);
             }
             HTMLFormElement.prototype.submit.call(form);
-            document.body.appendChild(form);
-            form.submit()
               
             alert(JSON.stringify(data))
         }
