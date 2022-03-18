@@ -24,7 +24,13 @@ function MTurkComponent({ defaultTaskData, children }) {
                 hiddenField.type = "hidden";
                 hiddenField.id = key;                
                 hiddenField.name = key;
-                hiddenField.value = data[key];
+                let value = data[key];
+
+                // Stringify complicated javascript objects
+                if (Array.isArray(value) || value.constructor == Object) {
+                    value = JSON.stringify(value);
+                }
+                hiddenField.value = value;
                 form.appendChild(hiddenField);
             }
             document.body.appendChild(form);
