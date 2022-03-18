@@ -1,30 +1,24 @@
 import json
 import os
 import re
-from typing import Dict
+import time
+from typing import Dict, Any
 
 import pandas as pd
 
-import boto3
 import requests
 from boto.mturk.question import HTMLQuestion
 import subprocess
 
+from union_annotation.scripts.utils import create_client, validate_experiment_id
+
+EXPERIMENT_ID = os.getenv("EXPERIMENT_ID")
+validate_experiment_id(EXPERIMENT_ID)
+EXPERIMENT_DESCRIPTION = os.getenv("EXPERIMENT_DESCRIPTION", "")
 MAX_ASSIGNMENTS = int(os.getenv("MAX_ASSIGNMENTS", 2))
 LIFETIME_IN_SECONDS = int(os.getenv("LIFETIME_IN_SECONDS", 120))
 ASSIGNMENT_DURATION_IN_SECONDS = int(os.getenv("ASSIGNMENT_DURATION_IN_SECONDS", 60 * 10))
 SERVER_URL = os.getenv("SERVER_URL")
-
-
-def create_client():
-    print("Creating client")
-
-    return boto3.client(
-        'mturk',
-        endpoint_url='https://mturk-requester-sandbox.us-east-1.amazonaws.com',
-        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-    )
 
 
 def build_on_remote_server() -> None:
@@ -100,7 +94,7 @@ def inject_data(index_html, datapoint):
     return index_html
 
 
-def publish_hit(index_html):
+def publish_hit(index_html) -> Dict[str, Any]:
     print("Publishing hit")
 
     # The first parameter is the HTML content
@@ -132,6 +126,11 @@ def publish_hit(index_html):
     print("https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id))
     print("Your HIT ID is: {}".format(hit_id))
 
+    return {
+        "HITId": hit_id,
+        "HITTypeId": hit_type_id
+    }
+
 
 def read_data():
     df = pd.read_csv("../../data/task_data_sample.csv")
@@ -140,11 +139,39 @@ def read_data():
         yield datapoint
 
 
+def save_hits(hits, hit_type_id, output_directory=f"output/{EXPERIMENT_ID}"):
+    curr_time = time.strftime("%Y%m%d-%H%M%S")
+
+    file_name = f'{curr_time}_hits.csv'
+    print(f"Saving hits to '{file_name}' ; ")
+
+    if not os.path.exists(output_directory):
+        os.makedirs(output_directory)
+    pd.DataFrame(hits).to_csv(f'{output_directory}/{file_name}', index=False)
+
+    experiment_details_file_name = f"{curr_time}_experiment.json"
+    print(f"Saving experiment details to '{experiment_details_file_name}' ; ")
+
+    with open(f"{output_directory}/{experiment_details_file_name}", "w") as f:
+        experiment_details = {
+            "id": EXPERIMENT_ID,
+            "description": EXPERIMENT_DESCRIPTION,
+            "max_assignments": MAX_ASSIGNMENTS,
+            "lifetime_in_seconds": LIFETIME_IN_SECONDS,
+            "assignment_duration_in_seconds": ASSIGNMENT_DURATION_IN_SECONDS,
+            "hit_type_id": hit_type_id
+        }
+
+        f.write(json.dumps(experiment_details))
+
+
 mtc = create_client()
 index_html = build_locally(force_build=False)
 build_on_remote_server()
 remote_file_names = get_remote_file_names()
 index_html = inject_remote(index_html, remote_file_names)
+hits = []
 for datapoint in read_data():
     injected_index_html = inject_data(index_html, datapoint)
-    publish_hit(injected_index_html)
+    hits.append(publish_hit(injected_index_html))
+save_hits(hits, hits[0]['HITTypeId'])
