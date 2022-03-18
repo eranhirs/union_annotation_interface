@@ -22,6 +22,7 @@ function MTurkComponent({ defaultTaskData, children }) {
                 // Based on https://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit
                 const hiddenField = document.createElement("input")
                 hiddenField.type = "hidden";
+                hiddenField.id = key;                
                 hiddenField.name = key;
                 hiddenField.value = JSON.stringify(data[key]);
                 form.appendChild(hiddenField);
