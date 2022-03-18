@@ -6,18 +6,18 @@ import { contradictingInformationDescription, elaboratedDescription, entailingIn
 
 function ExamplesAccordion({ examples, accordionId }) {
   return (
-    <div className="accordion" id="accordionFlushExample">
+    <div className="accordion" id={`accordionFlushExample${accordionId}`}>
       {
         examples.map(function (object, i) {
           const uniqueExampleId = `${accordionId}-${i}`
 
           return <div className="accordion-item">
-            <h2 className="accordion-header" id={`flush-heading-${uniqueExampleId}`}>
+            <h2 className="accordion-header" id={`flushHeading${uniqueExampleId}`}>
               <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-collapse-${uniqueExampleId}`} aria-expanded="false" aria-controls={`flush-collapse-${uniqueExampleId}`}>
                 Click here to view {object['exampleTitle'].toLowerCase()}
               </button>
             </h2>
-            <div id={`flush-collapse-${uniqueExampleId}`} className="accordion-collapse collapse" aria-labelledby={`flush-heading-${uniqueExampleId}`} data-bs-parent="#accordionFlushExample">
+            <div id={`flush-collapse-${uniqueExampleId}`} className="accordion-collapse collapse" aria-labelledby={`flushHeading${uniqueExampleId}`} data-bs-parent={`#accordionFlushExample${accordionId}`}>
               <div className="accordion-body">
                 <Example exampleId={String(i)} exampleData={object} />
               </div>
