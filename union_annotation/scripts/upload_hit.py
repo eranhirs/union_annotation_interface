@@ -11,7 +11,7 @@ from boto.mturk.question import HTMLQuestion
 import subprocess
 
 MAX_ASSIGNMENTS = int(os.getenv("MAX_ASSIGNMENTS", 2))
-LIFETIME_IN_SECONDS = int(os.getenv("LIFETIME_IN_SECONDS", 60))
+LIFETIME_IN_SECONDS = int(os.getenv("LIFETIME_IN_SECONDS", 120))
 ASSIGNMENT_DURATION_IN_SECONDS = int(os.getenv("ASSIGNMENT_DURATION_IN_SECONDS", 60 * 10))
 SERVER_URL = os.getenv("SERVER_URL")
 

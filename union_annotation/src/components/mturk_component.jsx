@@ -35,10 +35,7 @@ function MTurkComponent({ defaultTaskData, children }) {
     }
 
     return (
-        <form name='mturk_form' method='post' id='mturk_form' action='https://www.mturk.com/mturk/externalSubmit'>
-            <input type='hidden' value={assignmentID} name='assignmentId' id='assignmentId'/>        
-            {childrenWithMturkProps}
-        </form>
+        {childrenWithMturkProps}
     )
 }
 
