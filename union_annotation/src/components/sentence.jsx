@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { HighlightWithinTextarea, Selection } from 'react-highlight-within-textarea';
 
-const Sentence = ({ title, text, setText = null, chosenSentence = false, disabled = false, readOnly = true, highlight = false, onClick = null, highlightedPhrases = [], highlightModal = null, setHighlightCandidate = null, isExample = false }) => {
+const Sentence = ({ title, text, setText = null, chosenSentence = false, disabled = false, readOnly = true, highlight = false, onClick = null, highlightedPhrases = [], setHighlightPhrase = null, isExample = false }) => {
     const [value, setValue] = useState(text);
     const [selection, setSelection] = useState(undefined);
 
@@ -17,13 +17,11 @@ const Sentence = ({ title, text, setText = null, chosenSentence = false, disable
             // Handle bug where selection is not deleted
             if (!selection || selection.start != newSelection.start || selection.end != newSelection.end) {
                 setSelection(newSelection);
-
                 const { start, end } = newSelection.anchor > newSelection.focus ? { start: newSelection.focus, end: newSelection.anchor } : { start: newSelection.anchor, end: newSelection.focus }
                 const highlightedPhrase = value.substr(start, end - start);
-                if (highlightedPhrase.trim() != "" && !highlightedPhrases.includes(highlightedPhrase)) {
-                    setHighlightCandidate(highlightedPhrase)
-                    highlightModal.toggle();
-                }
+        
+                setHighlightPhrase(highlightedPhrase);
+
                 // inputRef.current.focus();
             }
         }

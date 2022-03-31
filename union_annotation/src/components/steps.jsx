@@ -64,8 +64,8 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, 
     const [ highlightModal, setHighlightModal ] = useState(null);
     const [ highlightCandidate, setHighlightCandidate ] = useState(null);
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={chosenSentenceId==1} highlight={chosenSentenceId!=1} chosenSentence={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} highlightModal={highlightModal} setHighlightCandidate={setHighlightCandidate} isExample={isExample} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={chosenSentenceId==2} highlight={chosenSentenceId!=2} chosenSentence={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} highlightModal={highlightModal} setHighlightCandidate={setHighlightCandidate} isExample={isExample} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={chosenSentenceId==1} highlight={chosenSentenceId!=1} chosenSentence={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} setHighlightPhrase={setHighlightPhrase} isExample={isExample} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={chosenSentenceId==2} highlight={chosenSentenceId!=2} chosenSentence={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} setHighlightPhrase={setHighlightPhrase} isExample={isExample} />
 
     useEffect(() => {
         if (myModal == null) {
@@ -87,6 +87,13 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, 
 
     function removeHighlightedPhrase(highlightedPhraseObject) {
         setHighlightedPhrases(highlightedPhrases.filter(object => object != highlightedPhraseObject))
+    }
+
+    function setHighlightPhrase(highlightedPhrase) {
+        if (highlightedPhrase.trim() != "" && !highlightedPhrases.includes(highlightedPhrase)) {
+            setHighlightCandidate(highlightedPhrase)
+            highlightModal.toggle();
+        }        
     }
 
     const highlightedPhrasesListComponent = <section>Highlighted phrases: {highlightedPhrases.length > 0 && highlightedPhrases.map(function(object, i) {
