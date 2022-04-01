@@ -37,7 +37,7 @@ function MTurkComponent({ defaultTaskData, children }) {
             HTMLFormElement.prototype.submit.call(form);
             document.body.removeChild(form);
 
-            alert(`Submitting ${JSON.stringify(data)}`);
+            console.log(`Submitting ${JSON.stringify(data)}`);
         }
     }
 

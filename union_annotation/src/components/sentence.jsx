@@ -20,7 +20,7 @@ const Sentence = ({ title, text, setText = null, chosenSentence = false, disable
                 const { start, end } = newSelection.anchor > newSelection.focus ? { start: newSelection.focus, end: newSelection.anchor } : { start: newSelection.anchor, end: newSelection.focus }
                 const highlightedPhrase = value.substr(start, end - start);
         
-                setHighlightPhrase(highlightedPhrase);
+                setHighlightPhrase(highlightedPhrase, start, end);
 
                 // inputRef.current.focus();
             }

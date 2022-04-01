@@ -46,18 +46,19 @@
     background-color: #f8f8f8;
     border-color: #d4d4d4;
     color: #545454;
-    cursor: no-drop;
+    cursor: copy;
   }
 
  /* Highlight cursor */
  .sentence .input-group.highlight {
-    cursor: copy;
+    cursor: text;
 }
 
  /* Removing padding that causes higlighting part of a word create spaces */
  mark.yellow {
      padding: 0;
      color: inherit;
+     background-color: #fee59d;
  }
 
  /* Put space above highlight-classification-list-group */

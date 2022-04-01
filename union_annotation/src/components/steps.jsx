@@ -60,28 +60,17 @@ function ChooseSentenceStep({ taskData, setStep, setAllowedStep, chosenSentenceI
 function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, setHighlightedPhrases, onContradiction = null, isExample = false }) {
     const { sentence1Text, sentence2Text } = taskData;
 
-    const modalRef = useRef(null);
-    const [ highlightModal, setHighlightModal ] = useState(null);
-    const [ highlightCandidate, setHighlightCandidate ] = useState(null);
-
     const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={chosenSentenceId==1} highlight={chosenSentenceId!=1} chosenSentence={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} setHighlightPhrase={setHighlightPhrase} isExample={isExample} />
     const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={chosenSentenceId==2} highlight={chosenSentenceId!=2} chosenSentence={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} setHighlightPhrase={setHighlightPhrase} isExample={isExample} />
 
-    useEffect(() => {
-        if (myModal == null) {
-            var myModal = new Modal(modalRef.current)
-            setHighlightModal(myModal);
-        }
-    }, [])
-
-    function highlightPhrase(highlightedPhrase, highlightType) {
-        setHighlightedPhrases([...highlightedPhrases, {
-            "phrase": highlightedPhrase,
-            "type": highlightType
-        }])
-
-        if (highlightType == "contradicting") {
-            onContradiction(highlightedPhrase);
+    function setHighlightPhrase(highlightedPhrase, start, end) {
+        const highlightedPhrasesTexts = highlightedPhrases.map(phraseObj => phraseObj['phrase'])
+        if (highlightedPhrase.trim() != "" && !highlightedPhrasesTexts.includes(highlightedPhrase)) {
+            setHighlightedPhrases([...highlightedPhrases, {
+                "phrase": highlightedPhrase,
+                "start": start,
+                "end": end
+            }])            
         }
     }
 
@@ -89,55 +78,10 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, 
         setHighlightedPhrases(highlightedPhrases.filter(object => object != highlightedPhraseObject))
     }
 
-    function setHighlightPhrase(highlightedPhrase) {
-        if (highlightedPhrase.trim() != "" && !highlightedPhrases.includes(highlightedPhrase)) {
-            setHighlightCandidate(highlightedPhrase)
-            highlightModal.toggle();
-        }        
-    }
-
     const highlightedPhrasesListComponent = <section>Highlighted phrases: {highlightedPhrases.length > 0 && highlightedPhrases.map(function(object, i) {
             return <mark className="yellow highlighted-phrase-list-component" onClick={() => removeHighlightedPhrase(object)}>{object['phrase']}</mark>
         }).reduce((prev, curr) => [prev, ", ", curr])}</section>
 
-
-    const highlightPhraseModalComponent = <div className="modal fade" ref={modalRef} id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                <div className="modal-header">
-                    <h5 className="modal-title" id="staticBackdropLabel">Highlight span</h5>
-                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div className="modal-body">
-                    You highlighted the span <mark className="yellow">{highlightCandidate}</mark> , please classify it to one of the following categories:
-                    <div className="list-group highlight-classification-list-group">
-                        <a href="#" className="list-group-item list-group-item-action" data-bs-dismiss="modal" onClick={() => highlightPhrase(highlightCandidate, "new")}>
-                            <div className="d-flex w-100 justify-content-between">
-                            <h5 className="mb-1">New Information</h5>
-                            </div>
-                            <p className="mb-1">{newInformationDescription}</p>
-                        </a>
-                        <a href="#" className="list-group-item list-group-item-action" data-bs-dismiss="modal" onClick={() => highlightPhrase(highlightCandidate, "entailing")}>
-                            <div className="d-flex w-100 justify-content-between">
-                            <h5 className="mb-1">Entailing Information</h5>
-                            </div>
-                            <p className="mb-1">{entailingInformationDescription}</p>
-                        </a>
-                        <a href="#" className="list-group-item list-group-item-action" data-bs-dismiss="modal" onClick={() => highlightPhrase(highlightCandidate, "contradicting")}>
-                            <div className="d-flex w-100 justify-content-between">
-                            <h5 className="mb-1">Contradicting Information</h5>
-                            </div>
-                            <p className="mb-1">{contradictingInformationDescription}</p>
-                            <small className="text-muted">Choosing this will automatically complete the HIT, because we would like to skip examples with contradicting information.</small>
-                        </a>
-                    </div>
-                </div>
-                <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-                </div>
-            </div>
-        </div>
 
     return (
         <div className="row">
@@ -152,7 +96,6 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, 
                 {sentence2}
                 {chosenSentenceId != 2 && highlightedPhrasesListComponent}                
             </div>
-            {highlightPhraseModalComponent}
         </div>
     )
 }
