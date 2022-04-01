@@ -19,6 +19,7 @@ MAX_ASSIGNMENTS = int(os.getenv("MAX_ASSIGNMENTS", 2))
 LIFETIME_IN_SECONDS = int(os.getenv("LIFETIME_IN_SECONDS", 120))
 ASSIGNMENT_DURATION_IN_SECONDS = int(os.getenv("ASSIGNMENT_DURATION_IN_SECONDS", 60 * 10))
 SERVER_URL = os.getenv("SERVER_URL")
+FILE_NAME = os.getenv("FILE_NAME", "task_data_sample.csv")
 
 
 def build_on_remote_server() -> None:
@@ -114,7 +115,7 @@ def publish_hit(index_html) -> Dict[str, Any]:
                               Title="Merge two sentences into one complete sentence",
                               Description="In this task, you will highlight the differences between two sentences and merge them into one sentence. More specifically, all of the information conveyed in each sentence should appear in the merged sentence.",
                               Keywords="nlp,language,fusion",
-                              Reward="0.5",
+                              Reward="0.1",
                               LifetimeInSeconds=LIFETIME_IN_SECONDS,
                               AssignmentDurationInSeconds=ASSIGNMENT_DURATION_IN_SECONDS
                               )
@@ -133,7 +134,7 @@ def publish_hit(index_html) -> Dict[str, Any]:
 
 
 def read_data():
-    df = pd.read_csv("../../data/task_data_sample.csv")
+    df = pd.read_csv(f"../../data/{FILE_NAME}")
 
     for datapoint in df.to_dict("records"):
         yield datapoint
@@ -159,7 +160,8 @@ def save_hits(hits, hit_type_id, output_directory=f"output/{EXPERIMENT_ID}"):
             "max_assignments": MAX_ASSIGNMENTS,
             "lifetime_in_seconds": LIFETIME_IN_SECONDS,
             "assignment_duration_in_seconds": ASSIGNMENT_DURATION_IN_SECONDS,
-            "hit_type_id": hit_type_id
+            "hit_type_id": hit_type_id,
+            "file_name": FILE_NAME
         }
 
         f.write(json.dumps(experiment_details))
