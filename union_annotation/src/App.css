@@ -1,3 +1,8 @@
+:root {
+    --highlight: #fee59d;
+    --highlight-remove: #fe9d9d;    
+}
+
 /* Put spaces around highlight-within-text-area-container */ 
 .highlight-within-text-area-container {
     margin-top: 10px;
@@ -33,6 +38,7 @@
  /* Put steps-btn-group in the middle of page */
  .steps-btn-group {
      margin-left: 50%;
+     margin-bottom: 30px;
  }
 
  /* Put border around highlight-within-text-area editors */ 
@@ -46,7 +52,7 @@
     background-color: #f8f8f8;
     border-color: #d4d4d4;
     color: #545454;
-    cursor: copy;
+    cursor: text;
   }
 
  /* Highlight cursor */
@@ -54,11 +60,11 @@
     cursor: text;
 }
 
- /* Removing padding that causes higlighting part of a word create spaces */
- mark.yellow {
-     padding: 0;
+ /* Removing padding that causes higlighting part of a word create spaces, and also add padding so browser default selection won't be noticed */
+ .highlight {
      color: inherit;
-     background-color: #fee59d;
+     background-color: var(--highlight);
+     padding: 2.8px 0;
  }
 
  /* Put space above highlight-classification-list-group */
@@ -88,6 +94,22 @@
 
  /* Delete highlighted phrase UI */
  .highlighted-phrase-list-component:hover {
-     background-color: #f4afaf;
+     background-color: var(--highlight-remove);
      cursor: pointer;
  }
+
+ /* Avoid blue highlighting */
+ .highlightable-container.highlightable > span::selection {
+    color: inherit;
+    background: var(--highlight);
+  }
+
+.highlightable-container.highlightable > span::-moz-selection {
+    color: inherit;
+    background: var(--highlight);
+}
+
+/* add some space before page numbers */
+.highlighted-phrases-list {
+    margin-bottom: 10px;
+}

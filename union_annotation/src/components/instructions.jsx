@@ -43,29 +43,16 @@ function Instructions({ examples }) {
             </div>
 
             <div className="col-12">
-              <ExamplesAccordion examples={[examples[0]]} accordionId={1} />
-            </div>
-
-            <div className="col-12">
-              <Directions title="">
-                {elaboratedDescription}
-                <dl className="row">
-                  <dt className="col-sm-3">* New information:</dt>
-                  <dd className="col-sm-9">{newInformationDescription}</dd>
-
-                  <dt className="col-sm-3">* Entailing information:</dt>
-                  <dd className="col-sm-9">{entailingInformationDescription}</dd>
-
-                  <dt className="col-sm-3">* Contradicting information:</dt>
-                  <dd className="col-sm-9">{contradictingInformationDescription}</dd>
-                </dl>
-              </Directions>
-
-              <div className="col-12">
-                <ExamplesAccordion examples={[examples[1], examples[2]]} accordionId={2} />
-              </div>
+              <ExamplesAccordion examples={[examples[0], examples[1]]} accordionId={1} />
             </div>
           </div>
+
+          {/* <div className="col-12">
+            <Directions title="">
+              {elaboratedDescription}
+              </Directions>              
+          </div> */}
+
 
         </div>
       </section>

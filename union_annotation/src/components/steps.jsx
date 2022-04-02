@@ -37,8 +37,8 @@ function ChooseSentenceStep({ taskData, setStep, setAllowedStep, chosenSentenceI
         setChosenSentenceId(chosenSentenceId);
     }
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} onClick={() => chooseSentence(1)} chosenSentence={chosenSentenceId==1} disabled={chosenSentenceId==1} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} onClick={() => chooseSentence(2)} chosenSentence={chosenSentenceId==2} disabled={chosenSentenceId==2} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} onClick={() => chooseSentence(1)} disabled={chosenSentenceId==1} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} onClick={() => chooseSentence(2)} disabled={chosenSentenceId==2} />
 
     return (
         <div className="row">
@@ -57,29 +57,33 @@ function ChooseSentenceStep({ taskData, setStep, setAllowedStep, chosenSentenceI
     )
 }
 
-function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, setHighlightedPhrases, onContradiction = null, isExample = false }) {
+function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceId, highlightedPhrases, setHighlightedPhrases, isExample = false }) {
     const { sentence1Text, sentence2Text } = taskData;
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={chosenSentenceId==1} highlight={chosenSentenceId!=1} chosenSentence={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} setHighlightPhrase={setHighlightPhrase} isExample={isExample} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={chosenSentenceId==2} highlight={chosenSentenceId!=2} chosenSentence={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} setHighlightPhrase={setHighlightPhrase} isExample={isExample} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={chosenSentenceId==1} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 1)} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={chosenSentenceId==2} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 2)} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
 
-    function setHighlightPhrase(highlightedPhrase, start, end) {
-        const highlightedPhrasesTexts = highlightedPhrases.map(phraseObj => phraseObj['phrase'])
-        if (highlightedPhrase.trim() != "" && !highlightedPhrasesTexts.includes(highlightedPhrase)) {
-            setHighlightedPhrases([...highlightedPhrases, {
-                "phrase": highlightedPhrase,
-                "start": start,
-                "end": end
-            }])            
+    function setHighlightPhrase(textParts) {
+        const highlightedPhrases = []
+        for (const textPart of textParts) {
+            if (textPart.isHighlighted) {
+                highlightedPhrases.push({
+                    "phrase": textPart.text,
+                    "start": textPart.start,
+                    "end": textPart.end,
+                    "sentenceId": highlightedSentenceId
+                })
+            }
         }
+        setHighlightedPhrases(highlightedPhrases)
     }
 
     function removeHighlightedPhrase(highlightedPhraseObject) {
         setHighlightedPhrases(highlightedPhrases.filter(object => object != highlightedPhraseObject))
     }
-
-    const highlightedPhrasesListComponent = <section>Highlighted phrases: {highlightedPhrases.length > 0 && highlightedPhrases.map(function(object, i) {
-            return <mark className="yellow highlighted-phrase-list-component" onClick={() => removeHighlightedPhrase(object)}>{object['phrase']}</mark>
+    
+    const highlightedPhrasesListComponent = <section className="highlighted-phrases-list">Highlighted phrases: {highlightedPhrases.length > 0 && highlightedPhrases.map(function(object, i) {
+            return <span className="highlighted-phrase-list-component highlight" onClick={() => removeHighlightedPhrase(object)}>{object['phrase']}</span>
         }).reduce((prev, curr) => [prev, ", ", curr])}</section>
 
 
@@ -104,8 +108,8 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedPhrases, 
 function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPhrases, chosenSentenceId, feedbackText, setFeedbackText, isExample = false }) {
     const { sentence1Text, sentence2Text } = taskData;
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} chosenSentence={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} chosenSentence={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 1)} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 2)} />
 
     const mergedSentenceComponent = <section>
         <h5 className="card-title">Merged sentence</h5>
@@ -130,12 +134,25 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
                 <Directions title="Step 4">
                     {mergeSentencesStepInstruction}
                 </Directions>
+                Here are some detailed guidelines:
+                <dl className="row">
+                    <dt className="col-sm-3">Write one sentence</dt>
+                    <dd className="col-sm-9">The merged text should be exactly one sentence, and related pieces of information should be close by in content and structure.</dd>
+
+                    <dt className="col-sm-3">Avoid repetition</dt>
+                    <dd className="col-sm-9">The merged sentence should contain each piece of information only once. In the case where one piece of information is more specific than the other, choose the more specific one.</dd>
+
+                    <dt className="col-sm-3">Avoid paraphrasing</dt>
+                    <dd className="col-sm-9">The merged sentence should contain the original phrasing of the information. However, it is ok to paraphase if necessary, for example in order to avoid repetition.</dd>
+                    
+                    <dt className="col-sm-3">Skip disagreement</dt>
+                    <dd className="col-sm-9">If a merge is not possible because one sentence disagrees with the other, please explain the disagreement in the feedback and submit an empty merged sentence.</dd>
+                </dl>                
             </div>}
             <div className="col-12">
                 {sentence1}
                 {sentence2}
                 {mergedSentenceComponent}
-                {/* <Sentence title="Merged sentence" text={mergedText} readOnly={false} setText={setMergedText}></Sentence> */}
                 {!isExample && feedbackTextComponent}
             </div>
         </div>

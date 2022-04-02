@@ -5,7 +5,6 @@ import { SubmissionData } from '../models.jsx';
 import { ChooseSentenceStep, HighlightPhrasesStep, MergeSentencesStep, ReadSentencesStep } from './steps.jsx';
 import { Modal } from 'bootstrap';
 
-
 function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const { sentence1Text, sentence2Text } = taskData;
     const [step, setStep] = useState(1);
@@ -31,7 +30,7 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
         }
     }
 
-    const submissionData = new SubmissionData(chosenSentenceId, highlightedPhrases, mergedText, feedbackText );
+    const submissionData = new SubmissionData(chosenSentenceId, highlightedPhrases, mergedText, feedbackText, taskData );
 
     const modalRef = useRef(null);
     const [ submitValidationModal, setSubmitValidationModal ] = useState(null);
@@ -48,15 +47,6 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const isMergedSentenceUnchanged = mergedText == sentence1Text || mergedText == sentence2Text
     const isFeedbackEmpty = feedbackText.trim() == ""
     let isSubmitDisabled = isFeedbackEmpty && (isMergedTextEmpty || isMergedSentenceUnchanged)
-
-    function onContradictionClicked(submissionData, contradictingPhrase) {
-        submissionData.highlightedPhrases.push({
-            "phrase": contradictingPhrase,
-            "type": "contradicting"
-        })
-
-        onSubmit(submissionData)
-    }
 
     function onSubmitClicked(submissionData) {
         if (isMergedTextEmpty || isMergedSentenceUnchanged) {
@@ -84,9 +74,10 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
             </div>
             </div>
         </div>
-    </div>            
+    </div>
 
-
+    // we are highlighting the other than the chosen sentence
+    const highlightedSentenceId = chosenSentenceId == 1 ? 2 : 1
 
     return (
         <div>
@@ -94,7 +85,7 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
             <div className="container actual-task">
                 {step == "1" && <ReadSentencesStep taskData={taskData} />}
                 {step == "2" && <ChooseSentenceStep taskData={taskData} setStep={setStep} setAllowedStep={setAllowedStep} chosenSentenceId={chosenSentenceId} setChosenSentenceId={setChosenSentenceIdAnResetNextSteps} />}
-                {step == "3" && <HighlightPhrasesStep taskData={taskData} chosenSentenceId={chosenSentenceId} highlightedPhrases={highlightedPhrases} setHighlightedPhrases={setHighlightedPhrases} onContradiction={(contradictingPhrase) => onContradictionClicked(submissionData, contradictingPhrase)} />}
+                {step == "3" && <HighlightPhrasesStep taskData={taskData} chosenSentenceId={chosenSentenceId} highlightedSentenceId={highlightedSentenceId} highlightedPhrases={highlightedPhrases} setHighlightedPhrases={setHighlightedPhrases} />}
                 {step == "4" && <MergeSentencesStep taskData={taskData} mergedText={mergedText} setMergedText={setMergedText} highlightedPhrases={highlightedPhrases} chosenSentenceId={chosenSentenceId} feedbackText={feedbackText} setFeedbackText={setFeedbackText} />}
 
                 <div className="row">
