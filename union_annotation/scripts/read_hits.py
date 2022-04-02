@@ -1,3 +1,5 @@
+import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List
@@ -32,7 +34,15 @@ def parse_mturk_assignment_to_dict(mturk_assignment: Dict) -> Dict[str, any]:
     for item in xmltodict.parse(mturk_assignment['Answer'])['QuestionFormAnswers']['Answer']:
         question = item['QuestionIdentifier']
         answer = item['FreeText']
-        answers[question] = answer
+        try:
+            value = json.loads(answer)
+        except:
+            try:
+                value = int(answer)
+            except:
+                value = answer
+
+        answers[question] = value
 
     return answers
 
@@ -52,7 +62,14 @@ class Assignment:
 
 def save_assignments(assignments: List[Assignment], hits_file_name, output_directory=f"output/{EXPERIMENT_ID}"):
     hits_file_name_no_extension = Path(hits_file_name).stem
-    pd.DataFrame(assignments).to_csv(f"{output_directory}/{hits_file_name_no_extension}_assignments.csv", index=False)
+    file_name = f"{output_directory}/{hits_file_name_no_extension}_assignments.csv"
+    counter = 1
+    while os.path.exists(file_name):
+        file_name_no_extension = Path(file_name).stem
+        file_name = f"{output_directory}/{file_name_no_extension}_{counter}.csv"
+        counter += 1
+
+    pd.DataFrame(assignments).to_csv(file_name, index=False)
 
 
 hits_file_name = os.getenv("FILE_NAME")

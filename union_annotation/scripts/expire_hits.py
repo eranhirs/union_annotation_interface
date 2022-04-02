@@ -1,8 +1,10 @@
+import logging
 import os
 
 from tqdm import tqdm
 
 from union_annotation.scripts.utils import validate_experiment_id, read_hits_file, create_client
+logging.basicConfig()
 
 EXPERIMENT_ID = os.getenv("EXPERIMENT_ID")
 validate_experiment_id(EXPERIMENT_ID)
@@ -18,4 +20,4 @@ for _, hit in tqdm(df_hits.iterrows()):
     try:
         mtc.delete_hit(HITId=hit_id)
     except:
-        print(f"Failed deleting hit_id {hit_id}")
+        logging.exception(f"Failed deleting hit_id {hit_id}")
