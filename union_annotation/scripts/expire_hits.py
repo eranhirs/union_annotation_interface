@@ -18,6 +18,7 @@ mtc = create_client()
 for _, hit in tqdm(df_hits.iterrows()):
     hit_id = hit['HITId']
     try:
+        mtc.update_expiration_for_hit(HITId=hit_id, ExpireAt=0)
         mtc.delete_hit(HITId=hit_id)
     except:
         logging.exception(f"Failed deleting hit_id {hit_id}")
