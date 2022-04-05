@@ -18,6 +18,7 @@ const contradictingInformationDescription = "Information conveyed in one sentenc
 /* Tooltips */
 const fullMatchDescription = "The color changes to green when you integrate all of the phrase into the merged sentence"
 const partialMatchDescription = "The color changes to blue when you integrate some of the phrase into the merged sentence"
+const repetitionWarningDescription = "This word exists in both sentences, such repetition should only be used if necessary"
 
 
-export { shortDescription, elaboratedDescription, readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, newInformationDescription, entailingInformationDescription, contradictingInformationDescription, fullMatchDescription, partialMatchDescription };
+export { shortDescription, elaboratedDescription, readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, newInformationDescription, entailingInformationDescription, contradictingInformationDescription, fullMatchDescription, partialMatchDescription, repetitionWarningDescription};
