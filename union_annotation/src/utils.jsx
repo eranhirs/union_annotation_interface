@@ -1,3 +1,8 @@
+function escapeRegExp(string) {
+    // See https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
 function findAllInText(textToSearchFor, textToSearchIn) {
     /*
     finds all ranges of `textToSearchFor` in `textToSearchIn`.
@@ -8,7 +13,7 @@ function findAllInText(textToSearchFor, textToSearchIn) {
 
     // Searching for "" doesn't make sense & stuck the browser
     if (textToSearchFor != "") {
-        const regex = new RegExp(`[ ,]?${textToSearchFor}[ .]?`, "gi");
+        const regex = new RegExp(`[ ,]?${escapeRegExp(textToSearchFor)}[ .]?`, "gi");
         let result;
         while ( result = regex.exec(textToSearchIn) ) {
             ranges.push([result.index + 1, result.index + textToSearchFor.length + 1]);
