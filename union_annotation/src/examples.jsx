@@ -4,14 +4,14 @@ import { ExampleData } from './models.jsx';
 // Example 1
 const example1Step3Extra = <section> In this example:
     <dl className="row">
-        <dt className="col-sm-3">* "Robbers"</dt>
-        <dd className="col-sm-9">Conveys the same information as "thieves" in sentence 1, do not highlight.</dd>
+        <dt className="col-sm-4">* "Robbers"</dt>
+        <dd className="col-sm-8">Conveys the same information as "thieves" in sentence 1, do <span className="fw-bold">not</span> highlight.</dd>
 
-        <dt className="col-sm-3">* "crash 4x4 into store"</dt>
-        <dd className="col-sm-9">This is new information, you should highlight it.</dd>
+        <dt className="col-sm-4">* "crash 4x4 into store"</dt>
+        <dd className="col-sm-8">This is new information, you should highlight it.</dd>
 
-        <dt className="col-sm-3">* "grabbing jewelry and watches , before setting car ablaze."</dt>
-        <dd className="col-sm-9">Conveys exactly the same information as sentence 1, do not highlight.</dd>
+        <dt className="col-sm-4">* "grabbing jewelry and watches , before setting car ablaze."</dt>
+        <dd className="col-sm-8">Conveys exactly the same information as sentence 1, do <span className="fw-bold">not</span> highlight.</dd>
     </dl>
 </section>
 
@@ -23,6 +23,7 @@ const example1 = new ExampleData(
     1,
     2,
     [{ "phrase": "crash 4x4 into store", "start": 8, "end": 28, "sentenceId": 2 }],
+    [{ "phrase": "crashing 4x4 into store", "start": 6, "end": 29 }],    
     "After crashing 4x4 into store and scooping up jewelry and watches estimated to be worth 2 million euros the thieves reversed their car out of the store and set fire to it before making off in another vehicle.",
     "In this example, we chose Sentence 1.",
     example1Step3Extra,
@@ -33,15 +34,15 @@ const example1 = new ExampleData(
 
 const example2Step3Extra = <section> In this example:
     <dl className="row">
-        <dt className="col-sm-3">* "H-P announced that it will buy"</dt>
-        <dd className="col-sm-9">Conveys the same information as sentence 1, do not highlight.</dd>
+        <dt className="col-sm-4">* "H-P announced that it will buy"</dt>
+        <dd className="col-sm-8">Conveys the same information as sentence 1, do <span className="fw-bold">not</span> highlight.</dd>
 
-        <dt className="col-sm-3">* "the outsourcing services company"</dt>
-        <dd className="col-sm-9">This is new information, you should highlight it.</dd>
+        <dt className="col-sm-4">* "the outsourcing services company"</dt>
+        <dd className="col-sm-8">This is new information, you should highlight it.</dd>
 
 
-        <dt className="col-sm-3">* "for $ 13.9 billion"</dt>
-        <dd className="col-sm-9">This is more specific than "nearly $14 billion", so you should highlight it and replace it in the text.</dd>
+        <dt className="col-sm-4">* "for $ 13.9 billion"</dt>
+        <dd className="col-sm-8">This is more specific than "nearly $14 billion", so you should highlight it and replace it in the text.</dd>
     </dl>
 </section>
 
@@ -56,6 +57,10 @@ const example2 = new ExampleData(
         { "phrase": "the outsourcing services company", "start": 31, "end": 63, "sentenceId": 1 },
         { "phrase": "for $ 13.9 billion", "start": 64, "end": 82, "sentenceId": 1 }
     ],
+    [
+        { "phrase": "the outsourcing services company", "start": 86, "end": 118 },
+        { "phrase": "of $ 13.9 billion", "start": 50, "end": 67 }
+    ],    
     "Earlier this month Hewlett-Packard unveiled a bid of $ 13.9 billion to purchase EDS , the outsourcing services company .",
     "In this example, we chose Sentence 2.",
     example2Step3Extra,

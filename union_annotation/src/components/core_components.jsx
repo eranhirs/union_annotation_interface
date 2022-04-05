@@ -8,7 +8,7 @@ function Directions({ title, children }) {
   return (
     <section>
       <h1>{title}</h1>
-      <p>{children}</p>
+      <p className="fs-5">{children}</p>
     </section>
   );
 }

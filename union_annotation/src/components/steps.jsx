@@ -12,7 +12,7 @@ function ReadSentencesStep({ taskData, isExample = false }) {
     
     return (
         <div className="row">
-            {!isExample && <div className="col-12">
+            {!isExample && <div className="col-12 fs-5">
                 <Directions title="Step 1">
                     Make sure you read the instructions and examples above. <br/><br/>
                     {readSentencesStepInstruction}
@@ -37,12 +37,12 @@ function ChooseSentenceStep({ taskData, setStep, setAllowedStep, chosenSentenceI
         setChosenSentenceId(chosenSentenceId);
     }
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} onClick={() => chooseSentence(1)} disabled={chosenSentenceId==1} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} onClick={() => chooseSentence(2)} disabled={chosenSentenceId==2} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} onClick={() => chooseSentence(1)} highlighted={chosenSentenceId==1} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} onClick={() => chooseSentence(2)} highlighted={chosenSentenceId==2} />
 
     return (
         <div className="row">
-            {!isExample && <div className="col-12">
+            {!isExample && <div className="col-12 fs-5">
                 <Directions title="Step 2">
                     {chooseSentenceStepInstruction}
                 </Directions>
@@ -60,8 +60,8 @@ function ChooseSentenceStep({ taskData, setStep, setAllowedStep, chosenSentenceI
 function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceId, highlightedPhrases, setHighlightedPhrases, isExample = false }) {
     const { sentence1Text, sentence2Text } = taskData;
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={chosenSentenceId==1} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 1)} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={chosenSentenceId==2} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 2)} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={chosenSentenceId==1} highlighted={chosenSentenceId==1} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 1)} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={chosenSentenceId==2} highlighted={chosenSentenceId==2} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 2)} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
 
     function setHighlightPhrase(textParts) {
         const highlightedPhrases = []
@@ -89,29 +89,29 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceI
 
     return (
         <div className="row">
-            {!isExample && <div className="col-12">
+            {!isExample && <div className="col-12 fs-5">
                 <Directions title="Step 3">
                     {highlightPhrasesStepInstruction}
                 </Directions>
             </div>}
             <div className="col-12">
                 {sentence1}
-                {chosenSentenceId != 1 && highlightedPhrasesListComponent}
+                {!isExample && chosenSentenceId != 1 && highlightedPhrasesListComponent}
                 {sentence2}
-                {chosenSentenceId != 2 && highlightedPhrasesListComponent}                
+                {!isExample && chosenSentenceId != 2 && highlightedPhrasesListComponent}                
             </div>
         </div>
     )
 }
 
 
-function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPhrases, chosenSentenceId, feedbackText, setFeedbackText, isExample = false }) {
+function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPhrases, mergedHighlightedPhrases, chosenSentenceId, feedbackText, setFeedbackText, isExample = false }) {
     const { sentence1Text, sentence2Text } = taskData;
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 1)} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 2)} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} highlighted={chosenSentenceId==1} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 1)} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} highlighted={chosenSentenceId==2} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 2)} />
 
-    const mergedSentenceComponent = <section>
+    const mergedSentenceTextArea = <section>
         <h5 className="card-title">Merged sentence</h5>
         <textarea
             onChange={(e) => setMergedText(e.target.value)}
@@ -119,6 +119,8 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
             value={mergedText}
         />
     </section>
+
+    const mergedSentenceHighlightable = <Sentence title="Merged sentence" text={mergedText} disabled={false} highlighted={false} highlightedPhrases={mergedHighlightedPhrases} setHighlightPhrase={() => {}} readOnly={true} />
 
     const feedbackTextComponent = <section>
             <h5 className="card-title">Feedback (optional)</h5>
@@ -130,7 +132,7 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
 
     return (
         <div className="row merge-sentences-step">
-            {!isExample && <div className="col-12">
+            {!isExample && <div className="col-12 fs-5">
                 <Directions title="Step 4">
                     {mergeSentencesStepInstruction}
                 </Directions>
@@ -152,7 +154,8 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
             <div className="col-12">
                 {sentence1}
                 {sentence2}
-                {mergedSentenceComponent}
+                {!isExample && mergedSentenceTextArea}
+                {isExample && mergedSentenceHighlightable}
                 {!isExample && feedbackTextComponent}
             </div>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction } from './texts.jsx';
 import { ChooseSentenceStep, HighlightPhrasesStep, MergeSentencesStep, ReadSentencesStep } from './steps.jsx';
+import { StepsComponent } from './steps_component.jsx';
 
 function ListGroupItem({ currStep, step, itemId, onClick }) {
     const activeClass = currStep == step ? "active " : ""
@@ -18,48 +19,49 @@ function ListItem({ currStep, step, itemId, children }) {
     )
 }
 
-
 function Example({ exampleId, exampleData }) {
-    const [step, setStep] = useState("1");
+    const [step, setStep] = useState(1);
+    const lastStep = 4;    
     const { mergedSentenceText, step2Extra, step3Extra, step4Extra } = exampleData;
 
     return (
         <section className="example">
-            <p>These are the steps you should take to create the merged sentence:</p>
+            {step == 1 && <p className="fs-5">These are the steps you should take to create the merged sentence:</p>}
             <div className="row">
-                <div className="col-4">
+                {/* <div className="col-2">
                     <div className="list-group" id="list-tab" role="tablist">
                         <ListGroupItem currStep={step} step={"1"} itemId={`${exampleId}_1`} onClick={setStep} />
                         <ListGroupItem currStep={step} step={"2"} itemId={`${exampleId}_2`} onClick={setStep} />
                         <ListGroupItem currStep={step} step={"3"} itemId={`${exampleId}_3`} onClick={setStep} />
                         {step4Extra != null && <ListGroupItem currStep={step} step={"4"} itemId={`${exampleId}_4`} onClick={setStep} />}
                     </div>
-                </div>
-                <div className="col-8">
+                </div> */}
+                <div className="col-12 fs-5">
                     <div className="tab-content" id="nav-tabContent">
                         <ListItem currStep={step} step={"1"} itemId={`${exampleId}_1`}>
                             {readSentencesStepInstruction}
                         </ListItem>
                         <ListItem currStep={step} step={"2"} itemId={`${exampleId}_2`}>
                             {chooseSentenceStepInstruction}
-                            <br /><br />{step2Extra}
                         </ListItem>
                         <ListItem currStep={step} step={"3"} itemId={`${exampleId}_3`}>
                             {highlightPhrasesStepInstruction}
-                            <br /><br />{step3Extra}
                         </ListItem>
                         {step4Extra != null && <ListItem currStep={step} step={"4"} itemId={`${exampleId}_4`}>
                             {mergeSentencesStepInstruction}
-
-                            <br /><br />{step4Extra}
                         </ListItem>}
                     </div>
                 </div>
             </div>
-            {step == "1" && <ReadSentencesStep taskData={exampleData} isExample={true} />}
-            {step == "2" && <ChooseSentenceStep taskData={exampleData} setStep={() => {}} setAllowedStep={() => {}} chosenSentenceId={exampleData.chosenSentenceId} setChosenSentenceId={() => {}} isExample={true} />}
-            {step == "3" && <HighlightPhrasesStep taskData={exampleData} chosenSentenceId={exampleData.chosenSentenceId} highlightedSentenceId={exampleData.highlightedSentenceId} highlightedPhrases={exampleData.highlightedPhrases} setHighlightedPhrases={() => {}} isExample={true} />}
-            {step == "4" && <MergeSentencesStep taskData={exampleData} mergedText={mergedSentenceText} setMergedText={() => {}} highlightedPhrases={exampleData.highlightedPhrases} chosenSentenceId={exampleData.chosenSentenceId} feedbackText={null} setFeedbackText={() => {}} isExample={true} />}
+            {step == 1 && <ReadSentencesStep taskData={exampleData} isExample={true} />}
+            {step == 2 && <ChooseSentenceStep taskData={exampleData} setStep={() => {}} setAllowedStep={() => {}} chosenSentenceId={exampleData.chosenSentenceId} setChosenSentenceId={() => {}} isExample={true} />}
+            {step == 3 && <HighlightPhrasesStep taskData={exampleData} chosenSentenceId={exampleData.chosenSentenceId} highlightedSentenceId={exampleData.highlightedSentenceId} highlightedPhrases={exampleData.highlightedPhrases} setHighlightedPhrases={() => {}} isExample={true} />}
+            {step == 4 && <MergeSentencesStep taskData={exampleData} mergedText={mergedSentenceText} setMergedText={() => {}} highlightedPhrases={exampleData.highlightedPhrases} mergedHighlightedPhrases={exampleData.mergedHighlightedPhrases} chosenSentenceId={exampleData.chosenSentenceId} feedbackText={null} setFeedbackText={() => {}} isExample={true} />}
+
+            {step == 2 && <div className="step-extra fs-5">{step2Extra}</div>}
+            {step == 3 && <div className="step-extra fs-5">{step3Extra}</div>}
+            {step == 4 && <div className="step-extra fs-5">{step4Extra}</div>}            
+            <StepsComponent step={step} setStep={setStep} allowedStep={lastStep} componentId={exampleId} />
         </section>
     );
 }

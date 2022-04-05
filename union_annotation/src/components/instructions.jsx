@@ -13,7 +13,7 @@ function ExamplesAccordion({ examples, accordionId }) {
 
           return <div className="accordion-item">
             <h2 className="accordion-header" id={`flushHeading${uniqueExampleId}`}>
-              <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-collapse-${uniqueExampleId}`} aria-expanded="false" aria-controls={`flush-collapse-${uniqueExampleId}`}>
+              <button className="accordion-button collapsed fs-5" type="button" data-bs-toggle="collapse" data-bs-target={`#flush-collapse-${uniqueExampleId}`} aria-expanded="false" aria-controls={`flush-collapse-${uniqueExampleId}`}>
                 Click here to view {object['exampleTitle'].toLowerCase()}
               </button>
             </h2>

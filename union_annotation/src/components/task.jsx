@@ -4,6 +4,7 @@ import { examples } from "./../examples.jsx";
 import { SubmissionData } from '../models.jsx';
 import { ChooseSentenceStep, HighlightPhrasesStep, MergeSentencesStep, ReadSentencesStep } from './steps.jsx';
 import { Modal } from 'bootstrap';
+import { StepsComponent } from './steps_component.jsx';
 
 function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const { sentence1Text, sentence2Text } = taskData;
@@ -35,10 +36,17 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const modalRef = useRef(null);
     const [ submitValidationModal, setSubmitValidationModal ] = useState(null);
 
+    const skipModalRef = useRef(null);
+    const [ skipValidationModal, setSkipValidationModal ] = useState(null);
+
     useEffect(() => {
         if (myModal == null) {
             var myModal = new Modal(modalRef.current)
             setSubmitValidationModal(myModal);
+        }
+        if (skipModal == null) {
+            var skipModal = new Modal(skipModalRef.current)
+            setSkipValidationModal(skipModal);
         }
     }, [])
 
@@ -48,13 +56,6 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const isFeedbackEmpty = feedbackText.trim() == ""
     let isSubmitDisabled = isFeedbackEmpty && (isMergedTextEmpty || isMergedSentenceUnchanged)
 
-    function onSubmitClicked(submissionData) {
-        if (isMergedTextEmpty || isMergedSentenceUnchanged) {
-            submitValidationModal.toggle()
-        } else {
-            onSubmit(submissionData)
-        }
-    }
 
     const submitValidationModalComponent = <div className="modal fade" ref={modalRef} id="submitValidationModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="submitValidationModelLabel" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
@@ -76,6 +77,39 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
         </div>
     </div>
 
+
+    const skipValidationModalComponent = <div className="modal fade" ref={skipModalRef} id="skipValidationModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="skipValidationModelLabel" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+            <div className="modal-header">
+                <h5 className="modal-title" id="skipValidationModelLabel">Submit {isSubmitDisabled ? "error" : "warning"}</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+                {isFeedbackEmpty && <section>Please add feedback to explain why are you skipping this example.</section>}
+                {!isFeedbackEmpty && <section>You are about to skip this task. This is encouraged if you can't merge the two sentences and have provided proper feedback.</section>}
+            </div>
+            <div className="modal-footer">
+                <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => onSubmit(submissionData)} disabled={isFeedbackEmpty}>Skip</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    function onSubmitClicked(submissionData, skip=false) {
+        if (skip == false) {
+            submissionData.skipped = false;
+            if (isMergedTextEmpty || isMergedSentenceUnchanged) {
+                submitValidationModal.toggle()
+            } else {
+                onSubmit(submissionData)
+            }
+        } else {
+            skipValidationModal.toggle()
+        }
+    }
+
     // we are highlighting the other than the chosen sentence
     const highlightedSentenceId = chosenSentenceId == 1 ? 2 : 1
 
@@ -90,23 +124,13 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
 
                 <div className="row">
                     <div className="col-12">
-                        <div className="btn-group steps-btn-group" role="group" aria-label="Basic radio toggle button group">
-                            <input type="radio" className="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked={step == 1 ? "true" : ""} disabled={allowedStep >= 1 ? "" : "true"} onClick={() => setStep(1)} />
-                            <label className="btn btn-outline-primary" for="btnradio1">1</label>
-
-                            <input type="radio" className="btn-check" name="btnradio" id="btnradio2" autocomplete="off" checked={step == 2 ? "true" : ""} disabled={allowedStep >= 2 ? "" : "true"} onClick={() => setStep(2)} />
-                            <label className="btn btn-outline-primary" for="btnradio2">2</label>
-
-                            <input type="radio" className="btn-check" name="btnradio" id="btnradio3" autocomplete="off" checked={step == 3 ? "true" : ""} disabled={allowedStep >= 3 ? "" : "true"} onClick={() => setStep(3)} />
-                            <label className="btn btn-outline-primary" for="btnradio3">3</label>
-
-                            <input type="radio" className="btn-check" name="btnradio" id="btnradio4" autocomplete="off" checked={step == 4 ? "true" : ""} disabled={allowedStep >= 4 ? "" : "true"} onClick={() => setStep(4)} />
-                            <label className="btn btn-outline-primary" for="btnradio4">4</label>                        
-                        </div>       
-                        {step == lastStep &&  <button type="button" className="btn btn-primary step-button submit-button" onClick={() => onSubmitClicked(submissionData)}>Submit</button>}      
+                        <StepsComponent step={step} setStep={setStep} allowedStep={allowedStep} componentId="task" />
+                        {step == lastStep &&  <button type="button" className="btn btn-primary step-button submit-button" onClick={() => onSubmitClicked(submissionData)}>Submit</button>}
+                        {step == lastStep &&  <button type="button" className="btn step-button submit-button" onClick={() => onSubmitClicked(submissionData, true)}>Skip</button>}
                     </div>
                 </div>
                 {submitValidationModalComponent}
+                {skipValidationModalComponent}
             </div>
         </div>
     );

@@ -113,7 +113,7 @@ def publish_hit(index_html) -> Dict[str, Any]:
     response = mtc.create_hit(Question=html_question.get_as_xml(),
                               MaxAssignments=MAX_ASSIGNMENTS,
                               Title="Merge two sentences into one complete sentence",
-                              Description="In this task, you will highlight the differences between two sentences and merge them into one sentence. More specifically, all of the information conveyed in each sentence should appear in the merged sentence.",
+                              Description="In this task, you will be presented with two sentences that overlap in information. You are tasked to highlight the differences between the two sentences and then merge them into one sentence. More specifically, all of the information conveyed in each sentence should be contained in the merged sentence without redundancies.",
                               Keywords="nlp,language,fusion",
                               Reward="0.1",
                               LifetimeInSeconds=LIFETIME_IN_SECONDS,

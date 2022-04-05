@@ -48,13 +48,20 @@
  }
  
   /* Disabled functionality for the highlighter class */
-  .sentence .highlight-within-text-area-container.disabled {
+  .sentence .disabled {
     background-color: #f8f8f8;
     border-color: #d4d4d4;
     color: #545454;
     cursor: text;
   }
 
+  /* Highlight chosen sentences */
+  .sentence .highlighted {
+    border-color: var(--highlight);
+    border-width: 2px;
+    cursor: text;
+  }
+    
  /* Highlight cursor */
  .sentence .input-group.highlight {
     cursor: text;
@@ -112,4 +119,9 @@
 /* add some space before page numbers */
 .highlighted-phrases-list {
     margin-bottom: 10px;
+}
+
+/* add some space before the extra in information */
+.step-extra {
+    margin: 10px 0;
 }
