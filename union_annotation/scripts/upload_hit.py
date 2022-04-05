@@ -19,7 +19,14 @@ MAX_ASSIGNMENTS = int(os.getenv("MAX_ASSIGNMENTS", 2))
 LIFETIME_IN_SECONDS = int(os.getenv("LIFETIME_IN_SECONDS", 120))
 ASSIGNMENT_DURATION_IN_SECONDS = int(os.getenv("ASSIGNMENT_DURATION_IN_SECONDS", 60 * 10))
 SERVER_URL = os.getenv("SERVER_URL")
+ENV = os.getenv("ENV")
 FILE_NAME = os.getenv("FILE_NAME", "task_data_sample.csv")
+
+if ENV == "prod":
+    print("About to run on prod, are you sure? (y/N)")
+    validation_input = input()
+    if validation_input != "y":
+        exit()
 
 
 def build_on_remote_server() -> None:
@@ -103,6 +110,44 @@ def publish_hit(index_html) -> Dict[str, Any]:
     # Check out the documentation on HTMLQuestion for more details
     html_question = HTMLQuestion(index_html, 800)
 
+    qualification_requirements = []
+
+    if ENV == "prod":
+        qualification_requirements = [
+      {
+          'QualificationTypeId': '00000000000000000040',  # Worker_​NumberHITsApproved
+          'Comparator': 'GreaterThan',
+          'IntegerValues': [
+              5000,
+          ]
+      },
+            {
+                'QualificationTypeId': '000000000000000000L0',  # Worker_​PercentAssignmentsApproved
+                'Comparator': 'GreaterThan',
+                'IntegerValues': [
+                    99,
+                ]
+            },
+            {
+                'QualificationTypeId': '00000000000000000071',  # Worker_Locale
+                'Comparator': 'In',
+                'LocaleValues': [
+                    {
+                        'Country': 'US'
+                    },
+                    {
+                        'Country': 'CA'
+                    },
+                    {
+                        'Country': 'AU'
+                    },
+                    # {
+                    #     'Country': 'UK'
+                    # }
+                ]
+            }
+        ]
+
     # These parameters define the HIT that will be created
     # question is what we defined above
     # max_assignments is the # of unique Workers you're requesting
@@ -112,19 +157,21 @@ def publish_hit(index_html) -> Dict[str, Any]:
     # Check out the documentation on CreateHIT for more details
     response = mtc.create_hit(Question=html_question.get_as_xml(),
                               MaxAssignments=MAX_ASSIGNMENTS,
-                              Title="Merge two sentences into one complete sentence",
+                              Title="Merge two sentences into one complete sentence (ID/UNION)",
                               Description="In this task, you will be presented with two sentences that overlap in information. You are tasked to highlight the differences between the two sentences and then merge them into one sentence. More specifically, all of the information conveyed in each sentence should be contained in the merged sentence without redundancies.",
                               Keywords="nlp,language,fusion",
-                              Reward="0.1",
+                              Reward="0.15",
                               LifetimeInSeconds=LIFETIME_IN_SECONDS,
-                              AssignmentDurationInSeconds=ASSIGNMENT_DURATION_IN_SECONDS
+                              AssignmentDurationInSeconds=ASSIGNMENT_DURATION_IN_SECONDS,
+                              QualificationRequirements=qualification_requirements,
                               )
 
     # The response included several fields that will be helpful later
     hit_type_id = response['HIT']['HITTypeId']
     hit_id = response['HIT']['HITId']
     print("Your HIT has been created. You can see it at this link:")
-    print("https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id))
+    link_format = "https://workersandbox.mturk.com/mturk/preview?groupId={}" if ENV != "prod" else "https://worker.mturk.com/mturk/preview?groupId={}"
+    print(link_format.format(hit_type_id))
     print("Your HIT ID is: {}".format(hit_id))
 
     return {

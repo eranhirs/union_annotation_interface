@@ -7,7 +7,7 @@ def create_client():
 
     return boto3.client(
         'mturk',
-        endpoint_url='https://mturk-requester-sandbox.us-east-1.amazonaws.com',
+        endpoint_url='https://mturk-requester.us-east-1.amazonaws.com' if os.getenv("ENV") == "prod" else 'https://mturk-requester-sandbox.us-east-1.amazonaws.com',
         aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
     )
