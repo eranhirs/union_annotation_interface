@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, contradictingInformationDescription, newInformationDescription, entailmentDescription, entailingInformationDescription } from './texts.jsx';
+import { readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, contradictingInformationDescription, newInformationDescription, entailmentDescription, entailingInformationDescription, fullMatchDescription, partialMatchDescription } from './texts.jsx';
 import { Sentence } from './sentence.jsx'
 import { Directions } from "./core_components.jsx";
 import { Modal } from 'bootstrap';
+import { findAllInText, phraseToWords } from '../utils.jsx';
 
 
 function ReadSentencesStep({ taskData, isExample = false }) {
@@ -60,8 +61,8 @@ function ChooseSentenceStep({ taskData, setStep, setAllowedStep, chosenSentenceI
 function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceId, highlightedPhrases, setHighlightedPhrases, isExample = false }) {
     const { sentence1Text, sentence2Text } = taskData;
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={chosenSentenceId==1} highlighted={chosenSentenceId==1} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 1)} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={chosenSentenceId==2} highlighted={chosenSentenceId==2} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 2)} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={chosenSentenceId==1} highlighted={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} useIndicesForHighlight={chosenSentenceId != 1} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={chosenSentenceId==2} highlighted={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} useIndicesForHighlight={chosenSentenceId != 2} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
 
     function setHighlightPhrase(textParts) {
         const highlightedPhrases = []
@@ -108,8 +109,44 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceI
 function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPhrases, mergedHighlightedPhrases, chosenSentenceId, feedbackText, setFeedbackText, isExample = false }) {
     const { sentence1Text, sentence2Text } = taskData;
 
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} highlighted={chosenSentenceId==1} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 1)} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} highlighted={chosenSentenceId==2} highlightedPhrases={highlightedPhrases.filter(obj => obj['sentenceId'] == 2)} />
+    function markHighlightedPhrasesAsMerged(mergedText, highlightedPhrases) {
+        /*
+        To encourage the user to use all highlighted phrases, we change the color of those that were already used.
+        This function identifies which word of the highlighted phrases were used.
+        */
+
+        // Copy highlighted phrases to not change it
+        const highlightedPhrasesCopy = JSON.parse(JSON.stringify(highlightedPhrases));
+
+        for (const highlightedPhrase of highlightedPhrasesCopy) {
+            const words = phraseToWords(highlightedPhrase['phrase'])
+            let foundWordsCount = 0
+            for (const word of words) {
+                const anyFound = findAllInText(word, mergedText).length > 0;
+                if (anyFound) {
+                    foundWordsCount += 1
+                }
+            }
+
+            const percentFound = foundWordsCount / words.length
+            if (percentFound >= 1.0) {
+                highlightedPhrase['className'] = 'full-highlight'
+                highlightedPhrase['tooltip'] = fullMatchDescription
+            } else if (percentFound > 0) {
+                highlightedPhrase['className'] = 'partial-highlight'
+                highlightedPhrase['tooltip'] = partialMatchDescription
+            } else {
+                highlightedPhrase['className'] = 'yellow-highlight'
+            }
+        }
+        
+        return highlightedPhrasesCopy
+    }
+
+    const highlightedPhrasesCopy = markHighlightedPhrasesAsMerged(mergedText, highlightedPhrases)
+
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} highlighted={chosenSentenceId==1} highlightedPhrases={highlightedPhrasesCopy} useIndicesForHighlight={chosenSentenceId != 1} mergedText={mergedText} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} highlighted={chosenSentenceId==2} highlightedPhrases={highlightedPhrasesCopy} useIndicesForHighlight={chosenSentenceId != 2} mergedText={mergedText} />
 
     const mergedSentenceTextArea = <section>
         <h5 className="card-title">Merged sentence</h5>
@@ -120,7 +157,7 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
         />
     </section>
 
-    const mergedSentenceHighlightable = <Sentence title="Merged sentence" text={mergedText} disabled={false} highlighted={false} highlightedPhrases={mergedHighlightedPhrases} setHighlightPhrase={() => {}} readOnly={true} />
+    const mergedSentenceHighlightable = <Sentence title="Merged sentence" text={mergedText} disabled={false} highlighted={false} useIndicesForHighlight={true} highlightedPhrases={mergedHighlightedPhrases} setHighlightPhrase={() => {}} readOnly={true} />
 
     const feedbackTextComponent = <section>
             <h5 className="card-title">Feedback (optional)</h5>
@@ -131,7 +168,7 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
         </section>
 
     return (
-        <div className="row merge-sentences-step">
+        <div className="row merge-sentences-step" key={highlightedPhrases}>
             {!isExample && <div className="col-12 fs-5">
                 <Directions title="Step 4">
                     {mergeSentencesStepInstruction}

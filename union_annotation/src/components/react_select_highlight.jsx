@@ -1,20 +1,37 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { findAllInText, phraseToWords } from '../utils.jsx';
 
 class TextPart {
-    constructor(start, end, text, isHighlighted) {
+    constructor(start, end, text, isHighlighted, className, tooltip) {
         this.start = start;
         this.end = end;
         this.text = text;
         this.isHighlighted = isHighlighted;
+        this.className = className;
+        this.tooltip = tooltip;        
     }
 }
 
-function ReactSelectHighlight({ text, onChange, highlightedPhrases = null, readOnly = false }) {
+function ReactSelectHighlight({ text, onChange, highlightedPhrases = null, useIndicesForHighlight = true, readOnly = false }) {
+    /*
+    param useIndicesForHighlight: When showing highlighted phrases for the original sentence, we use the indices (it would be weird if every "Sunday" in the sentence was highlighted).
+                                  However, for showing the highlighted phrases for other sentences, we want to ignore the indices.
+    */
+    
 
     let initialTextParts = [new TextPart(0, text.length, text, false)];
     if (highlightedPhrases !== null) {
         for (const highlightedPhrase of highlightedPhrases) {
-            initialTextParts = selectionToHiglightedObjects(highlightedPhrase['start'], highlightedPhrase['end'], initialTextParts)
+            if (useIndicesForHighlight) {
+                initialTextParts = selectionToHiglightedObjects(highlightedPhrase['start'], highlightedPhrase['end'], initialTextParts, highlightedPhrase['className'], highlightedPhrase['tooltip'])
+            } else {
+                for (const word of phraseToWords(highlightedPhrase['phrase'])) {
+                    for (const range of findAllInText(word, text)) {
+                        initialTextParts = selectionToHiglightedObjects(range[0], range[1], initialTextParts, highlightedPhrase['className'], highlightedPhrase['tooltip'])
+                    }
+                }
+            }
         }
     }
     const [highlightedObjects, setHighlightedObjects] = useState(initialTextParts);
@@ -22,14 +39,14 @@ function ReactSelectHighlight({ text, onChange, highlightedPhrases = null, readO
     // Use ref to container to make sure the selection is of the correct element
     const highlightableContainerRef = useRef(null);    
 
-    function selectionToHiglightedObjects(start, end, textParts) {
+    function selectionToHiglightedObjects(start, end, textParts, className, tooltip) {
         /*
         Add a selection to existing textParts
         */
 
         const selectedText = text.substr(start, end - start)
 
-        const newHighlightedObject = new TextPart(start, end, selectedText, true)
+        const newHighlightedObject = new TextPart(start, end, selectedText, true, className, tooltip)
 
         const higlightedObjectsToRemove = [];
         const higlightedObjectsToAdd = [];            
@@ -53,7 +70,7 @@ function ReactSelectHighlight({ text, onChange, highlightedPhrases = null, readO
                         const newEnd = highlightedObject.start + startOffset
                         const newText = text.substr(newStart, newEnd - newStart);
                         
-                        higlightedObjectsToAdd.push(new TextPart(newStart, newEnd, newText, false))
+                        higlightedObjectsToAdd.push(new TextPart(newStart, newEnd, newText, false, className, tooltip))
                     }
 
                     const endOffset = highlightedObject.end - newHighlightedObject.end;
@@ -62,7 +79,7 @@ function ReactSelectHighlight({ text, onChange, highlightedPhrases = null, readO
                         const newEnd = newHighlightedObject.end + endOffset
                         const newText = text.substr(newHighlightedObject.end, newEnd - newStart);
 
-                        higlightedObjectsToAdd.push(new TextPart(newStart, newEnd, newText, false))
+                        higlightedObjectsToAdd.push(new TextPart(newStart, newEnd, newText, false, className, tooltip))
                     }
                 }
             }
@@ -112,8 +129,26 @@ function ReactSelectHighlight({ text, onChange, highlightedPhrases = null, readO
         for (const textPart of textParts) {
             let textPartIdx = 0
             for (const char of textPart.text) {
-                items.push(<span className={`${textPart.isHighlighted ? "highlight" : ""} highlightable`} data-start={textPart.start + textPartIdx} data-idx={textPartIdx}>
-                    {char}
+                let charComponent = char
+
+                if (textPart.tooltip && textPart.isHighlighted) {
+                    const renderTooltip = (props) => (
+                        <Tooltip id="button-tooltip" {...props}>
+                          {textPart.tooltip}
+                        </Tooltip>
+                      );
+
+                    charComponent = <OverlayTrigger
+                                placement="top"
+                                delay={{ show: 250, hide: 400 }}
+                                overlay={renderTooltip}
+                            >
+                        <span className="tooltip-available">{char}</span>
+                    </OverlayTrigger>
+                }      
+
+                items.push(<span className={`${textPart.className} ${textPart.isHighlighted ? "highlight" : ""} highlightable`} data-start={textPart.start + textPartIdx} data-idx={textPartIdx}>
+                    {charComponent}
                 </span>)
                 textPartIdx += 1
             }

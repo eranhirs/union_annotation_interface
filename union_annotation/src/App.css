@@ -1,5 +1,7 @@
 :root {
-    --highlight: #fee59d;
+    --highlight-yellow: #fee59d;
+    --highlight-partial: #9debfe;
+    --highlight-full: #9dfead;
     --highlight-remove: #fe9d9d;    
 }
 
@@ -57,7 +59,7 @@
 
   /* Highlight chosen sentences */
   .sentence .highlighted {
-    border-color: var(--highlight);
+    border-color: var(--highlight-yellow);
     border-width: 2px;
     cursor: text;
   }
@@ -70,9 +72,18 @@
  /* Removing padding that causes higlighting part of a word create spaces, and also add padding so browser default selection won't be noticed */
  .highlight {
      color: inherit;
-     background-color: var(--highlight);
+     background-color: var(--highlight-yellow);
      padding: 2.8px 0;
  }
+
+ .highlight.partial-highlight {
+    background-color: var(--highlight-partial);
+ } 
+
+ .highlight.full-highlight {
+    background-color: var(--highlight-full);
+ }
+
 
  /* Put space above highlight-classification-list-group */
  .highlight-classification-list-group {
@@ -108,12 +119,12 @@
  /* Avoid blue highlighting */
  .highlightable-container.highlightable > span::selection {
     color: inherit;
-    background: var(--highlight);
+    background: var(--highlight-yellow);
   }
 
 .highlightable-container.highlightable > span::-moz-selection {
     color: inherit;
-    background: var(--highlight);
+    background: var(--highlight-yellow);
 }
 
 /* add some space before page numbers */
@@ -124,4 +135,9 @@
 /* add some space before the extra in information */
 .step-extra {
     margin: 10px 0;
+}
+
+/* Make it clear there is a tooltip */
+.tooltip-available {
+    cursor: help;
 }

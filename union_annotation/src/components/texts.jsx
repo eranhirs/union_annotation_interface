@@ -15,4 +15,9 @@ const newInformationDescription = "Information conveyed in one sentence and not 
 const entailingInformationDescription = "Information conveyed in one sentence and is more specific than the other sentence (replaces previous text).";
 const contradictingInformationDescription = "Information conveyed in one sentence and contradicts the information conveyed in the other sentence.";
 
-export { shortDescription, elaboratedDescription, readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, newInformationDescription, entailingInformationDescription, contradictingInformationDescription };
+/* Tooltips */
+const fullMatchDescription = "The color changes to green when you integrate all of the phrase into the merged sentence"
+const partialMatchDescription = "The color changes to blue when you integrate some of the phrase into the merged sentence"
+
+
+export { shortDescription, elaboratedDescription, readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, newInformationDescription, entailingInformationDescription, contradictingInformationDescription, fullMatchDescription, partialMatchDescription };
