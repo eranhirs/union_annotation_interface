@@ -105,7 +105,7 @@ function ReactSelectHighlight({ text, onChange, highlightedPhrases = null, useIn
             if (isValidSelection) {
                 const selectedText = selection.toString();
 
-                if (selectedText != "") {
+                if (selectedText.trim() != "") {
                     // Take into consideration that the selection started from a span (startContainer) which has an offset compared to the full text
                     const selectedTextPartStart = parseInt(range.startContainer.parentElement['dataset']['start'])
                     const absoluteSelectionStart = selectedTextPartStart + range.startOffset
@@ -172,7 +172,7 @@ function ReactSelectHighlight({ text, onChange, highlightedPhrases = null, useIn
     }
 
     return (
-        <section key={highlightedPhrases} ref={highlightableContainerRef} className={`highlightable-container ${readOnly ? '' : 'highlightable'}`} onMouseDown={catchMouseUpEverywhere} onDoubleClick={checkSelection} onMouseUpCapture={checkSelection}>
+        <section key={highlightedPhrases.map(obj => obj.phrase)} ref={highlightableContainerRef} className={`highlightable-container ${readOnly ? '' : 'highlightable'}`} onMouseDown={catchMouseUpEverywhere} onDoubleClick={checkSelection} onMouseUpCapture={checkSelection}>
             {textPartsToHTML(highlightedObjects)}
         </section>
     )

@@ -110,6 +110,12 @@
     width: 100%;
  }
 
+/* Highlighted phrase list component UI */
+ .highlighted-phrase-list-component {
+     padding-left: 5px;
+     padding-right: 5px;     
+ }
+
  /* Delete highlighted phrase UI */
  .highlighted-phrase-list-component:hover {
      background-color: var(--highlight-remove);

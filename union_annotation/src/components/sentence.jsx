@@ -12,7 +12,7 @@ const Sentence = ({ title, text, disabled = false, highlighted = false, readOnly
     const inputRef = useRef(null);
 
     return (
-        <section key={[highlightedPhrases, mergedText]} className={`sentence ${onClick != null ? "clickable " : " "}`}>
+        <section key={[highlightedPhrases.map(obj => obj.phrase), mergedText]} className={`sentence ${onClick != null ? "clickable " : " "}`}>
             <h5 className="card-title">{title}</h5>
             <div className={`input-group highlight-within-text-area-container ${disabled ? "disabled " : " "} ${highlighted ? "highlighted" : " "}`} onClick={() => onClick ? onClick() : " "} ref={inputRef}>
                 <ReactSelectHighlight text={text} onChange={onChange} highlightedPhrases={highlightedPhrases} useIndicesForHighlight={useIndicesForHighlight} readOnly={disabled || readOnly} />

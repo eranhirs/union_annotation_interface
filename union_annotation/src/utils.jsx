@@ -13,10 +13,10 @@ function findAllInText(textToSearchFor, textToSearchIn) {
 
     // Searching for "" doesn't make sense & stuck the browser
     if (textToSearchFor != "") {
-        const regex = new RegExp(`[ ,]?${escapeRegExp(textToSearchFor)}[ .]?`, "gi");
+        const regex = new RegExp(`${escapeRegExp(textToSearchFor)}`, "gi");
         let result;
         while ( result = regex.exec(textToSearchIn) ) {
-            ranges.push([result.index + 1, result.index + textToSearchFor.length + 1]);
+            ranges.push([result.index, result.index + textToSearchFor.length]);
         }
     }
 
