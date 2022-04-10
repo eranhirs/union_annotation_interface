@@ -29,7 +29,7 @@ function phraseToWords(phrase) {
     Very naive split of phrases to words (should work well when text is tokenized)
     */
 
-    return phrase.split(" ")
+    return phrase.trim().split(" ")
 }
 
 
