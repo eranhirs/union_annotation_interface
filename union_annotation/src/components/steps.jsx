@@ -178,19 +178,21 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
                 <Directions title="Step 4">
                     {mergeSentencesStepInstruction}
                 </Directions>
-                Here are some detailed guidelines:
                 <dl className="row">
-                    <dt className="col-sm-3">Write one sentence</dt>
-                    <dd className="col-sm-9">The merged text should be exactly one sentence, and related pieces of information should be close by in content and structure.</dd>
+                    <dt className="col-sm-2">Write one sentence</dt>
+                    <dd className="col-sm-10">There should be exactly one sentence in the merged text, and related information should be close in content and structure.</dd>
 
-                    <dt className="col-sm-3">Avoid repetition</dt>
-                    <dd className="col-sm-9">The merged sentence should contain each piece of information only once. In the case where one piece of information is more specific than the other, choose the more specific one.</dd>
+                    <dt className="col-sm-2">Avoid repetition</dt>
+                    <dd className="col-sm-10">
+Each piece of information should appear only once in the merged sentence.
+<br/>Choose the more specific phrasing when there is a repetition.
+<br/>However, repeat common knowledge (for example, keep both "France” and “Paris").</dd>
 
-                    <dt className="col-sm-3">Avoid paraphrasing</dt>
-                    <dd className="col-sm-9">The merged sentence should contain the original phrasing of the information. However, it is ok to paraphase if necessary, for example in order to avoid repetition.</dd>
+                    <dt className="col-sm-2">Avoid paraphrasing</dt>
+                    <dd className="col-sm-10">To the extent possible, the merged sentence should preserve the original wording of the information.</dd>
                     
-                    <dt className="col-sm-3">Skip disagreement</dt>
-                    <dd className="col-sm-9">If a merge is not possible because one sentence disagrees with the other, please explain the disagreement in the feedback and submit an empty merged sentence.</dd>
+                    <dt className="col-sm-2">Skip if necessary</dt>
+                    <dd className="col-sm-10">Please use the Skip button if you cannot merge, for example if one sentence disagrees with another.</dd>
                 </dl>                
             </div>}
             <div className="col-12">
