@@ -28,4 +28,4 @@ const contradictingInformationDescription = "Information conveyed in one sentenc
 
 
 
-export { shortDescription, elaboratedDescription, readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, newInformationDescription, entailingInformationDescription, contradictingInformationDescription, fullMatchDescription, partialMatchDescription, repetitionWarningDescription};
+export { shortDescription, elaboratedDescription, readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, newInformationDescription, entailingInformationDescription, contradictingInformationDescription, fullMatchDescription, noMatchDescription, partialMatchDescription, repetitionWarningDescription};

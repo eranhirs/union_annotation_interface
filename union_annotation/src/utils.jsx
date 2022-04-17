@@ -13,10 +13,11 @@ function findAllInText(textToSearchFor, textToSearchIn) {
 
     // Searching for "" doesn't make sense & stuck the browser
     if (textToSearchFor != "") {
-        const regex = new RegExp(`${escapeRegExp(textToSearchFor)}`, "gi");
+        // Regex explanation: \W indicates not a word , and we also want to catch cases where it is at the beginning or end of the sentence.
+        const regex = new RegExp(`(^|\\W)${escapeRegExp(textToSearchFor)}(\\W|$)`, "gi");
         let result;
         while ( result = regex.exec(textToSearchIn) ) {
-            ranges.push([result.index, result.index + textToSearchFor.length]);
+            ranges.push([result.index + 1, result.index + textToSearchFor.length + 1]);
         }
     }
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, contradictingInformationDescription, newInformationDescription, entailmentDescription, entailingInformationDescription, fullMatchDescription, partialMatchDescription } from './texts.jsx';
+import { readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, contradictingInformationDescription, newInformationDescription, entailmentDescription, entailingInformationDescription, fullMatchDescription, partialMatchDescription, noMatchDescription } from './texts.jsx';
 import { Sentence } from './sentence.jsx'
 import { Directions } from "./core_components.jsx";
 import { Modal } from 'bootstrap';
@@ -142,6 +142,7 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
                 highlightedPhrase['tooltip'] = partialMatchDescription
             } else {
                 highlightedPhrase['className'] = 'yellow-highlight'
+                highlightedPhrase['tooltip'] = noMatchDescription                
             }
         }
         
