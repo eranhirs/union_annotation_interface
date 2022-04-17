@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { findAllInText, phraseToWords } from '../utils.jsx';
+import { HighlightTooltip } from './highlight_tooltip.jsx';
 import { repetitionWarningDescription } from './texts.jsx';
 
 class TextPart {
@@ -133,19 +134,7 @@ function ReactSelectHighlight({ text, onChange, highlightedPhrases = null, useIn
                 let charComponent = char
 
                 if (textPart.tooltip && textPart.isHighlighted) {
-                    const renderTooltip = (props) => (
-                        <Tooltip id="button-tooltip" {...props}>
-                          {Array.isArray(textPart.tooltip) ? textPart.tooltip.map(tooltipMsg => <span>* {tooltipMsg}<br/></span>) : textPart.tooltip}
-                        </Tooltip>
-                      );
-
-                    charComponent = <OverlayTrigger
-                                placement="top"
-                                delay={{ show: 250, hide: 400 }}
-                                overlay={renderTooltip}
-                            >
-                        <span className="tooltip-available">{char}</span>
-                    </OverlayTrigger>
+                    charComponent = <HighlightTooltip text={char} tooltipText={textPart.tooltip} />
                 }      
 
                 items.push(<span className={`${textPart.className} ${textPart.isHighlighted ? "highlight" : ""} highlightable`} data-start={textPart.start + textPartIdx} data-idx={textPartIdx}>

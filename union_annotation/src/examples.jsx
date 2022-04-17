@@ -12,7 +12,7 @@ const example1Step3Extra = <section> In this example:
         <dd className="col-sm-8">This is new information, you should highlight it. Notice how "store" is also highlighted in sentence 1, if possible you should avoid repetition.</dd>
 
         <dt className="col-sm-4">* "grabbing jewelry and watches , before setting car ablaze."</dt>
-        <dd className="col-sm-8">Conveys exactly the same information as sentence 1, do <span className="fw-bold">not</span> highlight.</dd>
+        <dd className="col-sm-8">Conveys the same information included in sentence 1, do <span className="fw-bold">not</span> highlight.</dd>
     </dl>
 </section>
 

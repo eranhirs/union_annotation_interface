@@ -13,12 +13,12 @@ function ReadSentencesStep({ taskData, isExample = false }) {
     
     return (
         <div className="row">
-            {!isExample && <div className="col-12 fs-5">
+            <div className="col-12 fs-5">
                 <Directions title="Step 1">
                     Make sure you read the instructions and examples above. <br/><br/>
                     {readSentencesStepInstruction}
                 </Directions>
-            </div>}
+            </div>
             <div className="col-12">
                 <section>
                     {sentence1}
@@ -43,11 +43,11 @@ function ChooseSentenceStep({ taskData, setStep, setAllowedStep, chosenSentenceI
 
     return (
         <div className="row">
-            {!isExample && <div className="col-12 fs-5">
+            <div className="col-12 fs-5">
                 <Directions title="Step 2">
                     {chooseSentenceStepInstruction}
                 </Directions>
-            </div>}
+            </div>
             <div className="col-md-12">
                 {sentence1}
             </div>
@@ -95,11 +95,11 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceI
 
     return (
         <div className="row">
-            {!isExample && <div className="col-12 fs-5">
+            <div className="col-12 fs-5">
                 <Directions title="Step 3">
                     {highlightPhrasesStepInstruction}
                 </Directions>
-            </div>}
+            </div>
             <div className="col-12">
                 {sentence1}
                 {!isExample && chosenSentenceId != 1 && highlightedPhrasesListComponent}
@@ -174,13 +174,13 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
 
     return (
         <div className="row merge-sentences-step" key={highlightedPhrases}>
-            {!isExample && <div className="col-12 fs-5">
+            <div className="col-12 fs-5">
                 <Directions title="Step 4">
                     {mergeSentencesStepInstruction}
                 </Directions>
-                <dl className="row">
+                {!isExample && <dl className="row">
                     <dt className="col-sm-2">Write one sentence</dt>
-                    <dd className="col-sm-10">There should be exactly one sentence in the merged text, and related information should be close in content and structure.</dd>
+                    <dd className="col-sm-10">There should be exactly one sentence in the merged text, and related information should be adjacent in content and structure.</dd>
 
                     <dt className="col-sm-2">Avoid repetition</dt>
                     <dd className="col-sm-10">
@@ -193,8 +193,8 @@ Each piece of information should appear only once in the merged sentence.
                     
                     <dt className="col-sm-2">Skip if necessary</dt>
                     <dd className="col-sm-10">Please use the Skip button if you cannot merge, for example if one sentence disagrees with another.</dd>
-                </dl>                
-            </div>}
+                </dl>}
+            </div>
             <div className="col-12">
                 {sentence1}
                 {sentence2}

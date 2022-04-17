@@ -27,15 +27,7 @@ function Example({ exampleId, exampleData }) {
     return (
         <section className="example">
             {step == 1 && <p className="fs-5">These are the steps you should take to create the merged sentence:</p>}
-            <div className="row">
-                {/* <div className="col-2">
-                    <div className="list-group" id="list-tab" role="tablist">
-                        <ListGroupItem currStep={step} step={"1"} itemId={`${exampleId}_1`} onClick={setStep} />
-                        <ListGroupItem currStep={step} step={"2"} itemId={`${exampleId}_2`} onClick={setStep} />
-                        <ListGroupItem currStep={step} step={"3"} itemId={`${exampleId}_3`} onClick={setStep} />
-                        {step4Extra != null && <ListGroupItem currStep={step} step={"4"} itemId={`${exampleId}_4`} onClick={setStep} />}
-                    </div>
-                </div> */}
+            {/* <div className="row">
                 <div className="col-12 fs-5">
                     <div className="tab-content" id="nav-tabContent">
                         <ListItem currStep={step} step={"1"} itemId={`${exampleId}_1`}>
@@ -52,7 +44,7 @@ function Example({ exampleId, exampleData }) {
                         </ListItem>}
                     </div>
                 </div>
-            </div>
+            </div> */}
             {step == 1 && <ReadSentencesStep taskData={exampleData} isExample={true} />}
             {step == 2 && <ChooseSentenceStep taskData={exampleData} setStep={() => {}} setAllowedStep={() => {}} chosenSentenceId={exampleData.chosenSentenceId} setChosenSentenceId={() => {}} isExample={true} />}
             {step == 3 && <HighlightPhrasesStep taskData={exampleData} chosenSentenceId={exampleData.chosenSentenceId} highlightedSentenceId={exampleData.highlightedSentenceId} highlightedPhrases={exampleData.highlightedPhrases} setHighlightedPhrases={() => {}} isExample={true} />}
