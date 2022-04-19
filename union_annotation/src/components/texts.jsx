@@ -19,7 +19,7 @@ const highlightPhrasesStepInstruction = "In the other sentence, highlight the in
 const highlightTooltip = <span className="highlight"><HighlightTooltip text="yellow" tooltipText={noMatchDescription} /></span>
 const partialHighlightTooltip = <span className="highlight partial-highlight"><HighlightTooltip text="blue" tooltipText={partialMatchDescription} /></span>
 const fullHighlightTooltip =  <span className="highlight full-highlight"><HighlightTooltip text="green" tooltipText={fullMatchDescription} /></span>
-const mergeSentencesStepInstruction = <span>Add the spans you highlighted from the previous sentence into the new sentence. If needed, you may <span className="fw-bold">minimally</span> adjust the sentence phrasing to create a coherent merged sentence. Three colors ({highlightTooltip}, {partialHighlightTooltip} and {fullHighlightTooltip}) are used to help you merge all of the information, hover over them to get an explanation of each color.</span>;
+const mergeSentencesStepInstruction = <span>Add the spans you highlighted from the previous sentence into the new sentence. If needed, you may <span className="fw-bold">minimally</span> adjust the sentence phrasing to create a coherent merged sentence. Highlights will change colors ({highlightTooltip}, {partialHighlightTooltip} or {fullHighlightTooltip}) to help you merge all of the information, hover over them to get an explanation of each color.</span>;
 
 /* Highlights descriptions */
 const newInformationDescription = "Information conveyed in one sentence and not in the other sentence (adds to text).";
