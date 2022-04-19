@@ -6,23 +6,15 @@ from typing import Any, Dict, List
 
 from dataclasses_json import dataclass_json
 
-from union_annotation.scripts.utils import create_client, validate_experiment_id, read_hits_file
+from union_annotation.scripts.utils import create_client, validate_experiment_id, read_hits_file, \
+    get_last_output_file_path
 import pandas as pd
 import os
 import xmltodict
 
 EXPERIMENT_ID = os.getenv("EXPERIMENT_ID")
 validate_experiment_id(EXPERIMENT_ID)
-
-
-def get_last_output_file_path(output_directory=f"output/{EXPERIMENT_ID}") -> str:
-    """
-    Find the latest output
-    """
-
-    outputs = os.listdir(output_directory)
-    outputs = [output for output in outputs if output.endswith("_hits.csv")]
-    return sorted(outputs)[-1]
+output_directory = f"output/{EXPERIMENT_ID}"
 
 
 def parse_mturk_assignment_to_dict(mturk_assignment: Dict) -> Dict[str, any]:
@@ -62,11 +54,11 @@ class Assignment:
 
 def save_assignments(assignments: List[Assignment], hits_file_name, output_directory=f"output/{EXPERIMENT_ID}"):
     hits_file_name_no_extension = Path(hits_file_name).stem
-    file_name = f"{output_directory}/{hits_file_name_no_extension}_assignments.csv"
+    assignments_file_name_no_extension = f"{hits_file_name_no_extension}_assignments"
+    file_name = f"{output_directory}/{assignments_file_name_no_extension}.csv"
     counter = 1
     while os.path.exists(file_name):
-        file_name_no_extension = Path(file_name).stem
-        file_name = f"{output_directory}/{file_name_no_extension}_{counter}.csv"
+        file_name = f"{output_directory}/{assignments_file_name_no_extension}_{counter}.csv"
         counter += 1
 
     pd.DataFrame(assignments).to_csv(file_name, index=False)
@@ -74,7 +66,7 @@ def save_assignments(assignments: List[Assignment], hits_file_name, output_direc
 
 hits_file_name = os.getenv("FILE_NAME")
 if not hits_file_name:
-    hits_file_name = get_last_output_file_path()
+    hits_file_name = get_last_output_file_path(output_directory)
 
 output_directory = f"output/{EXPERIMENT_ID}"
 df_hits = read_hits_file(hits_file_name, output_directory)

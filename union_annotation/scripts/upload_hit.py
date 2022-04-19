@@ -10,7 +10,7 @@ import requests
 from boto.mturk.question import HTMLQuestion
 import subprocess
 
-from union_annotation.scripts.utils import create_client, validate_experiment_id
+from union_annotation.scripts.utils import create_client, validate_experiment_id, prod_prompt_validation
 
 EXPERIMENT_ID = os.getenv("EXPERIMENT_ID")
 validate_experiment_id(EXPERIMENT_ID)
@@ -21,12 +21,9 @@ ASSIGNMENT_DURATION_IN_SECONDS = int(os.getenv("ASSIGNMENT_DURATION_IN_SECONDS",
 SERVER_URL = os.getenv("SERVER_URL")
 ENV = os.getenv("ENV")
 FILE_NAME = os.getenv("FILE_NAME", "task_data_sample.csv")
+SCREENING_QUALIFICATION_TYPE_ID = os.getenv("SCREENING_QUALIFICATION_TYPE_ID")
 
-if ENV == "prod":
-    print("About to run on prod, are you sure? (y/N)")
-    validation_input = input()
-    if validation_input != "y":
-        exit()
+prod_prompt_validation(ENV)
 
 
 def build_on_remote_server() -> None:
@@ -47,11 +44,11 @@ def get_remote_file_names() -> Dict[str, str]:
     remote_file_names = {}
     js_build_files = requests.get(f"{SERVER_URL}/static/js/").json()
     remote_file_names['js'] = [build_file['name'] for build_file in js_build_files if
-                          build_file['name'].startswith('main') and build_file['name'].endswith('.js')][0]
+                               build_file['name'].startswith('main') and build_file['name'].endswith('.js')][0]
 
     css_build_files = requests.get(f"{SERVER_URL}/static/css/").json()
     remote_file_names['css'] = [build_file['name'] for build_file in css_build_files if
-                          build_file['name'].startswith('main') and build_file['name'].endswith('.css')][0]
+                                build_file['name'].startswith('main') and build_file['name'].endswith('.css')][0]
 
     return remote_file_names
 
@@ -114,18 +111,18 @@ def publish_hit(index_html) -> Dict[str, Any]:
 
     if ENV == "prod":
         qualification_requirements = [
-      {
-          'QualificationTypeId': '00000000000000000040',  # Worker_​NumberHITsApproved
-          'Comparator': 'GreaterThan',
-          'IntegerValues': [
-              5000,
-          ]
-      },
+            {
+                'QualificationTypeId': '00000000000000000040',  # Worker_​NumberHITsApproved
+                'Comparator': 'GreaterThan',
+                'IntegerValues': [
+                    5000,
+                ]
+            },
             {
                 'QualificationTypeId': '000000000000000000L0',  # Worker_​PercentAssignmentsApproved
                 'Comparator': 'GreaterThan',
                 'IntegerValues': [
-                    99,
+                    98,
                 ]
             },
             {
@@ -141,10 +138,17 @@ def publish_hit(index_html) -> Dict[str, Any]:
                     {
                         'Country': 'AU'
                     },
-                    # {
-                    #     'Country': 'UK'
-                    # }
+                    {
+                        'Country': 'GB'
+                    },
+                    {
+                        'Country': 'NZ'
+                    }
                 ]
+            },
+            {
+                "QualificationTypeId": SCREENING_QUALIFICATION_TYPE_ID,
+                'Comparator': 'DoesNotExist'
             }
         ]
 
@@ -158,7 +162,7 @@ def publish_hit(index_html) -> Dict[str, Any]:
     response = mtc.create_hit(Question=html_question.get_as_xml(),
                               MaxAssignments=MAX_ASSIGNMENTS,
                               Title="Merge two sentences into one complete sentence (ID/UNION)",
-                              Description="In this task, you will be presented with two sentences that overlap in information. You are tasked to highlight the differences between the two sentences and then merge them into one sentence. More specifically, all of the information conveyed in each sentence should be contained in the merged sentence without redundancies.",
+                              Description="NOTE: Annotators successfully completing this screening task would be presented with significantly larger batches and higher compensation. In this task, you will be presented with two sentences that overlap in information, and you are tasked to  merge them into one sentence. More specifically, all of the information conveyed in each sentence should be contained in the merged sentence without redundancies. During this process, you first choose one sentence as a starting point and then highlight information that is new or has more specific wording in the other sentence.",
                               Keywords="nlp,language,fusion",
                               Reward="0.15",
                               LifetimeInSeconds=LIFETIME_IN_SECONDS,
