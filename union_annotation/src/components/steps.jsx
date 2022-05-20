@@ -17,7 +17,7 @@ function ReadSentencesStep({ taskData, isExample = false }) {
         <div className="row">
             <div className="col-12 fs-5">
                 <Directions title="Step 1">
-                    {!isExample && <span>Make sure you read the instructions and examples, you can open them using the instructions button below. <br/><br/></span>}
+                    {!isExample && <span>Please read the instructions and examples, you can see them by clicking the instructions button below. <br/><br/></span>}
                     {readSentencesStepInstruction}
                 </Directions>
             </div>
@@ -109,62 +109,28 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceI
 }
 
 
-function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPhrases, mergedHighlightedPhrases, chosenSentenceId, feedbackText, setFeedbackText, isExample = false }) {
+function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPhrases, mergedHighlightedPhrases, chosenSentenceId, feedbackText, setFeedbackText, skipped, setSkipped, isExample = false }) {
     const { sentence1Text, sentence2Text } = taskData;
 
-    function markHighlightedPhrasesAsMerged(mergedText, highlightedPhrases) {
-        /*
-        To encourage the user to use all highlighted phrases, we change the color of those that were already used.
-        This function identifies which word of the highlighted phrases were used.
-        */
-
-        // Copy highlighted phrases to not change it
-        const highlightedPhrasesCopy = JSON.parse(JSON.stringify(highlightedPhrases));
-
-        for (const highlightedPhrase of highlightedPhrasesCopy) {
-            const words = phraseToWords(highlightedPhrase['phrase'])
-            let foundWordsCount = 0
-            for (const word of words) {
-                const anyFound = findAllInText(word, mergedText).length > 0;
-                if (anyFound) {
-                    foundWordsCount += 1
-                }
-            }
-
-            const percentFound = foundWordsCount / words.length
-            if (percentFound >= 1.0) {
-                highlightedPhrase['className'] = 'full-highlight'
-                highlightedPhrase['tooltip'] = fullMatchDescription
-            } else if (percentFound > 0) {
-                highlightedPhrase['className'] = 'partial-highlight'
-                highlightedPhrase['tooltip'] = partialMatchDescription
-            } else {
-                highlightedPhrase['className'] = 'yellow-highlight'
-                highlightedPhrase['tooltip'] = noMatchDescription                
-            }
-        }
-        
-        return highlightedPhrasesCopy
-    }
-
-    const highlightedPhrasesCopy = markHighlightedPhrasesAsMerged(mergedText, highlightedPhrases)
-
-    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} highlighted={chosenSentenceId==1} highlightedPhrases={highlightedPhrasesCopy} useIndicesForHighlight={chosenSentenceId != 1} mergedText={mergedText} />
-    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} highlighted={chosenSentenceId==2} highlightedPhrases={highlightedPhrasesCopy} useIndicesForHighlight={chosenSentenceId != 2} mergedText={mergedText} />
+    const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} highlighted={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} useIndicesForHighlight={chosenSentenceId != 1} mergedText={mergedText} />
+    const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} disabled={true} highlighted={chosenSentenceId==2} highlightedPhrases={highlightedPhrases} useIndicesForHighlight={chosenSentenceId != 2} mergedText={mergedText} />
 
     const mergedSentenceTextArea = <section>
         <h5 className="card-title">Merged sentence</h5>
-        <textarea
+        {!skipped && <textarea
             onChange={(e) => setMergedText(e.target.value)}
             placeholder="Please complete here the merged sentence"
             value={mergedText}
-        />
+            disabled={skipped}
+        />}
+        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={skipped} onClick={() => setSkipped(!skipped)} />
+        <label className="form-check-label" htmlFor="flexCheckDefault">&nbsp;Skip: These two sentences have contradicting information, or are too different to create a coherent merged sentence (provide feedback instead)</label>
     </section>
 
     const mergedSentenceHighlightable = <Sentence title="Merged sentence" text={mergedText} disabled={false} highlighted={false} useIndicesForHighlight={true} highlightedPhrases={mergedHighlightedPhrases} setHighlightPhrase={() => {}} readOnly={true} />
 
-    const feedbackTextComponent = <section>
-            <h5 className="card-title">Feedback (optional)</h5>
+    const feedbackTextComponent = <section className="feedback-component">
+            <h5 className="card-title">Feedback {!skipped ? "(optional)" : ""}</h5>
             <textarea
             onChange={(e) => setFeedbackText(e.target.value)}
             placeholder="Please provide here feedback about the task"
@@ -175,7 +141,7 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
         <div className="row merge-sentences-step" key={highlightedPhrases}>
             <div className="col-12 fs-5">
                 <Directions title="Step 4">
-                {!isExample && <span>Make sure you read the elaborated instructions for the merge step (Step 4), you can open them using the instructions button below. <br/><br/></span>}
+                {!isExample && <span>Please read the elaborated instructions for the merge step (Step 4), you can see them by clicking the instructions button below. <br/><br/></span>}
                     {mergeSentencesStepInstruction}
                 </Directions>
             </div>

@@ -30,7 +30,20 @@ function phraseToWords(phrase) {
     Very naive split of phrases to words (should work well when text is tokenized)
     */
 
-    return phrase.trim().split(" ")
+    const wordsWithRanges = []
+    const words = phrase.trim().split(" ")
+    
+    // Add indices to each word by counting word lengths
+    let start_index = 0
+    for (const word of words) {
+        wordsWithRanges.push({
+            "word": word,
+            "range": [start_index, start_index + word.length]
+        })
+        start_index += word.length + 1
+    }
+
+    return wordsWithRanges
 }
 
 

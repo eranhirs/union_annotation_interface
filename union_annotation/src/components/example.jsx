@@ -36,7 +36,7 @@ function Example({ exampleId, exampleData }) {
             {step == 1 && <ReadSentencesStep taskData={exampleData} isExample={true} />}
             {step == 2 && <ChooseSentenceStep taskData={exampleData} setStep={() => {}} setAllowedStep={() => {}} chosenSentenceId={exampleData.chosenSentenceId} setChosenSentenceId={() => {}} isExample={true} />}
             {step == 3 && <HighlightPhrasesStep taskData={exampleData} chosenSentenceId={exampleData.chosenSentenceId} highlightedSentenceId={exampleData.highlightedSentenceId} highlightedPhrases={exampleData.highlightedPhrases} setHighlightedPhrases={() => {}} isExample={true} />}
-            {step == 4 && <MergeSentencesStep taskData={exampleData} mergedText={mergedSentenceText} setMergedText={() => {}} highlightedPhrases={exampleData.highlightedPhrases} mergedHighlightedPhrases={exampleData.mergedHighlightedPhrases} chosenSentenceId={exampleData.chosenSentenceId} feedbackText={null} setFeedbackText={() => {}} isExample={true} />}
+            {step == 4 && <MergeSentencesStep taskData={exampleData} mergedText={mergedSentenceText} setMergedText={() => {}} highlightedPhrases={exampleData.highlightedPhrasesCopy} mergedHighlightedPhrases={exampleData.mergedHighlightedPhrases} chosenSentenceId={exampleData.chosenSentenceId} feedbackText={null} setFeedbackText={() => {}} isExample={true} />}
 
             {step == 2 && <div className="step-extra fs-5">{step2Extra}</div>}
             {step == 3 && <div className="step-extra fs-5">{step3Extra}</div>}

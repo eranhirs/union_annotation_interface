@@ -28,7 +28,8 @@ function ReactSelectHighlight({ text, onChange, highlightedPhrases = null, useIn
             if (useIndicesForHighlight) {
                 initialTextParts = selectionToHiglightedObjects(highlightedPhrase['start'], highlightedPhrase['end'], initialTextParts, highlightedPhrase['className'], highlightedPhrase['tooltip'])
             } else {
-                for (const word of phraseToWords(highlightedPhrase['phrase'])) {
+                for (const wordWithRange of phraseToWords(highlightedPhrase['phrase'])) {
+                    const word = wordWithRange['word'];
                     for (const range of findAllInText(word, text)) {
                         initialTextParts = selectionToHiglightedObjects(range[0], range[1], initialTextParts, highlightedPhrase['className'], highlightedPhrase['tooltip'] ? [repetitionWarningDescription, highlightedPhrase['tooltip']] : repetitionWarningDescription)
                     }

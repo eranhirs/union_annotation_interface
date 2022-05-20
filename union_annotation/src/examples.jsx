@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { fullMatchDescription, partialMatchDescription } from './components/texts.jsx';
+import { fullHighlightTooltip, fullMatchDescription, highlightTooltip, noMatchDescription, partialMatchDescription } from './components/texts.jsx';
 import { ExampleData } from './models.jsx';
 
 // Example 1
@@ -23,14 +23,26 @@ const example1 = new ExampleData(
     "Robbers crash 4x4 into store , grabbing jewelry and watches , before setting car ablaze.",
     1,
     2,
-    [{ "phrase": "crash 4x4 into store", "start": 8, "end": 28, "sentenceId": 2 }],
     [
-        { "phrase": "crashing 4x4 into store", "start": 6, "end": 29, "className": "full-highlight", "tooltip": fullMatchDescription }
+        { "phrase": "crash 4x4 into store", "start": 8, "end": 28 }
+    ],
+    [
+        { "phrase": "crash", "start": 8, "end": 13, "tooltip": noMatchDescription },
+        { "phrase": "4x4", "start": 14, "end": 17, "className": "full-highlight", "tooltip": fullMatchDescription },
+        { "phrase": "into", "start": 18, "end": 22, "className": "full-highlight", "tooltip": fullMatchDescription },
+        { "phrase": "store", "start": 23, "end": 28, "className": "full-highlight", "tooltip": fullMatchDescription }
+    ],
+    [
+        // { "phrase": "crashing", "start": 6, "end": 14, "tooltip": noMatchDescription },
+        // { "phrase": "4x4", "start": 15, "end": 18, "className": "full-highlight", "tooltip": fullMatchDescription },
+        // { "phrase": "into", "start": 19, "end": 23, "className": "full-highlight", "tooltip": fullMatchDescription },
+        // { "phrase": "store", "start": 24, "end": 29, "className": "full-highlight", "tooltip": fullMatchDescription }
+        // { "phrase": "crashing 4x4 into store", "start": 6, "end": 29, "className": "full-highlight", "tooltip": fullMatchDescription }
     ],
     "After crashing 4x4 into store and scooping up jewelry and watches estimated to be worth 2 million euros the thieves reversed their car out of the store and set fire to it before making off in another vehicle.",
     "In this example, we chose Sentence 1.",
     example1Step3Extra,
-    'In this example, we add "crash 4x4 into store". Note how we slightly rephrased "crash" to "crashing", please rephrase only if necessary to make the sentence grammatical or fluent.'
+    <span>In this example, we add "crash 4x4 into store" into the merged sentence. Note how the words that were copy pasted are now {fullHighlightTooltip}, while the word "crash" was rephrased to "crashing", which is why it is still {highlightTooltip}. Please rephrase only if necessary to make the sentence grammatical or fluent.</span>
 );
 
 // Example 2
@@ -61,6 +73,10 @@ const example2 = new ExampleData(
         { "phrase": "for $ 13.9 billion", "start": 64, "end": 82, "sentenceId": 1 }
     ],
     [
+        { "phrase": "the outsourcing services company", "start": 31, "end": 63, "sentenceId": 1 },
+        { "phrase": "for $ 13.9 billion", "start": 64, "end": 82, "sentenceId": 1 }
+    ],
+    [
         { "phrase": "the outsourcing services company", "start": 86, "end": 118, "className": "full-highlight", "tooltip": fullMatchDescription },
         { "phrase": "of $ 13.9 billion", "start": 50, "end": 67, "className": "full-highlight", "tooltip": fullMatchDescription }
     ],    
@@ -86,6 +102,9 @@ const example3 = new ExampleData(
     "A shocking video released for the first time Thursday captures the moment a Brooklyn mother of 12 was killed in a gang shootout as she picked her daughter up from school .",
     2,
     1,
+    [
+        { "phrase": "of 13", "start": 25, "end": 30, "sentenceId": 1 }
+    ],
     [
         { "phrase": "of 13", "start": 25, "end": 30, "sentenceId": 1 }
     ],

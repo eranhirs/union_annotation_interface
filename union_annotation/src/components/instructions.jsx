@@ -57,7 +57,7 @@ function Instructions({ examples }) {
 
               <h4>Step 4 (Merge step)</h4>
             When writing the merged sentence, order the information in the sentence in a coherent stand-alone manner (as if the sentence would have been written from scratch). Avoid being distracted by the original split and ordering of information in the two original sentences.
-            If needed, you may <span className="fw-bold">minimally</span> adjust the phrasing of the sentence to create a coherent merged sentence. Highlights will change colors ({highlightTooltip}, {partialHighlightTooltip} or {fullHighlightTooltip}) to help you merge all of the information.
+            If needed, you may <span className="fw-bold">minimally</span> adjust the phrasing of the sentence to create a coherent merged sentence. Highlights will change colors from {highlightTooltip} to {fullHighlightTooltip} to help you merge all of the information.
 <br/>
             <dl className="row instructions-list">
               

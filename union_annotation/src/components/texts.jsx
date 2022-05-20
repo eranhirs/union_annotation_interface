@@ -8,9 +8,9 @@ const shortDescription = "In this task, you will be presented with two sentences
 const elaboratedDescription = " In the merge process, you should highlight differences between the sentences.";
 
 /* Tooltips */
-const noMatchDescription = "Yellow indicates you highlighted a phrase, but it is not contained by the merged sentence"
+const noMatchDescription = "Yellow indicates you highlighted a word, but it is not contained by the merged sentence"
 const partialMatchDescription = "Blue indicates only some of the phrase you highlighted is contained by the merged sentence"
-const fullMatchDescription = "Green indicates all of the phrase you highlighted is contained by the merged sentence"
+const fullMatchDescription = "Green indicates the word you highlighted is contained by the merged sentence"
 const repetitionWarningDescription = "This word is highlighted to emphasize that it exists in both sentences, such repetition should only be used if necessary"
 
 /* Steps instructions */
@@ -21,7 +21,7 @@ const highlightPhrasesStepInstruction = "In the other sentence, highlight the in
 const highlightTooltip = <span className="highlight"><HighlightTooltip text={<span>yellow {questionMarkIcon}</span>} tooltipText={noMatchDescription} /></span>
 const partialHighlightTooltip = <span className="highlight partial-highlight"><HighlightTooltip text={<span>blue {questionMarkIcon}</span>} tooltipText={partialMatchDescription} /></span>
 const fullHighlightTooltip =  <span className="highlight full-highlight"><HighlightTooltip text={<span>green {questionMarkIcon}</span>} tooltipText={fullMatchDescription} /></span>
-const mergeSentencesStepInstruction = <span>Add the spans you highlighted from the previous sentence into the base sentence to create the new merged sentence.</span>;
+const mergeSentencesStepInstruction = <span>Add the spans you highlighted from the previous sentence into the base sentence to create the new merged sentence. If it doesn't make sense to merge the two sentences (e.g., too different or contradicting), you can skip creating a merged sentence using the checkbox below.</span>;
 
 /* Highlights descriptions */
 const newInformationDescription = "Information conveyed in one sentence and not in the other sentence (adds to text).";
