@@ -21,7 +21,7 @@ const highlightPhrasesStepInstruction = "In the other sentence, highlight the in
 const highlightTooltip = <span className="highlight"><HighlightTooltip text={<span>yellow {questionMarkIcon}</span>} tooltipText={noMatchDescription} /></span>
 const partialHighlightTooltip = <span className="highlight partial-highlight"><HighlightTooltip text={<span>blue {questionMarkIcon}</span>} tooltipText={partialMatchDescription} /></span>
 const fullHighlightTooltip =  <span className="highlight full-highlight"><HighlightTooltip text={<span>green {questionMarkIcon}</span>} tooltipText={fullMatchDescription} /></span>
-const mergeSentencesStepInstruction = <span>Add the spans you highlighted from the previous sentence into the base sentence to create the new merged sentence. If it doesn't make sense to merge the two sentences (e.g., too different or contradicting), you can skip creating a merged sentence using the checkbox below.</span>;
+const mergeSentencesStepInstruction = <span>Add the spans you highlighted from the previous sentence into the base sentence to create the new merged sentence. If it doesn't make sense to merge the two sentences (e.g., contradicting or unrelated events), you can skip creating a merged sentence.</span>;
 
 /* Highlights descriptions */
 const newInformationDescription = "Information conveyed in one sentence and not in the other sentence (adds to text).";

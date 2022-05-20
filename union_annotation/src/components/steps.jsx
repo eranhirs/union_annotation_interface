@@ -94,7 +94,7 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceI
         <div className="row">
             <div className="col-12 fs-5">
                 <Directions title="Step 3">
-                    {!isExample && <span>Make sure you read the elaborated instructions for the highlight step (Step 3), you can open them using the instructions button below. <br/><br/></span>}
+                    {!isExample && <span>Please read the elaborated instructions for the highlight step (Step 3), you can see them by clicking the instructions button below. <br/><br/></span>}
                     {highlightPhrasesStepInstruction}
                 </Directions>
             </div>
@@ -124,7 +124,7 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
             disabled={skipped}
         />}
         <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={skipped} onClick={() => setSkipped(!skipped)} />
-        <label className="form-check-label" htmlFor="flexCheckDefault">&nbsp;Skip: These two sentences have contradicting information, or are too different to create a coherent merged sentence (provide feedback instead)</label>
+        <label className="form-check-label" htmlFor="flexCheckDefault">&nbsp;Skip:</label> I can't create a coherent merged sentence, because these two sentences have contradicting information or they refer to unrelated events (provide feedback instead)
     </section>
 
     const mergedSentenceHighlightable = <Sentence title="Merged sentence" text={mergedText} disabled={false} highlighted={false} useIndicesForHighlight={true} highlightedPhrases={mergedHighlightedPhrases} setHighlightPhrase={() => {}} readOnly={true} />

@@ -62,7 +62,7 @@ function Instructions({ examples }) {
             <dl className="row instructions-list">
               
                     <dt className="col-sm-2">Write one sentence</dt>
-                    <dd className="col-sm-10">The merged text should consist of a single sentence, and you should order the information in a coherent stand-alone manner as if the sentence would have been written from scratch.</dd>
+                    <dd className="col-sm-10">The merged text should consist of a single sentence.</dd>
 
                     <dt className="col-sm-2">Avoid repetition</dt>
                     <dd className="col-sm-10">
