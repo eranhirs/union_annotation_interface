@@ -30,7 +30,7 @@ const example1 = new ExampleData(
     "After crashing 4x4 into store and scooping up jewelry and watches estimated to be worth 2 million euros the thieves reversed their car out of the store and set fire to it before making off in another vehicle.",
     "In this example, we chose Sentence 1.",
     example1Step3Extra,
-    'In this example, we add "crash 4x4 into store". Note how we slightly rephrased "crash" to "crashing", please rephrase only if necessary.'
+    'In this example, we add "crash 4x4 into store". Note how we slightly rephrased "crash" to "crashing", please rephrase only if necessary to make the sentence grammatical or fluent.'
 );
 
 // Example 2

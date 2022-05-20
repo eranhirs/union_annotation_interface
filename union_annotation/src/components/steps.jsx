@@ -15,7 +15,7 @@ function ReadSentencesStep({ taskData, isExample = false }) {
         <div className="row">
             <div className="col-12 fs-5">
                 <Directions title="Step 1">
-                    Make sure you read the instructions and examples above. <br/><br/>
+                    {!isExample && <span>Make sure you read the instructions and examples above. <br/><br/></span>}
                     {readSentencesStepInstruction}
                 </Directions>
             </div>
@@ -181,7 +181,7 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
                 </Directions>
                 {!isExample && <dl className="row">
                     <dt className="col-sm-2">Write one sentence</dt>
-                    <dd className="col-sm-10">There should be exactly one sentence in the merged text, and related information should be adjacent in content and structure.</dd>
+                    <dd className="col-sm-10">The merged text should consist of a single sentence, and you should order the information in a coherent stand-alone manner as if the sentence would have been written from scratch.</dd>
 
                     <dt className="col-sm-2">Avoid repetition</dt>
                     <dd className="col-sm-10">
@@ -193,7 +193,7 @@ Each piece of information should appear only once in the merged sentence.
                     <dd className="col-sm-10">To the extent possible, the merged sentence should preserve the original wording of the information.</dd>
                     
                     <dt className="col-sm-2">Skip if necessary</dt>
-                    <dd className="col-sm-10">Please use the Skip button if you cannot merge, for example if one sentence disagrees with another.</dd>
+                    <dd className="col-sm-10">Please use the Skip button if you cannot merge, for example, if one sentence disagrees with another, or if they refer to completely unrelated events.</dd>
                 </dl>}
             </div>
             <div className="col-12">
