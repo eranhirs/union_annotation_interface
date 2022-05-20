@@ -6,8 +6,8 @@ function LoadingScreen() {
 
 function Directions({ title, children }) {
   return (
-    <section>
-      <h1>{title}</h1>
+    <section className="directions">
+      <h3>{title}</h3>
       <p className="fs-5">{children}</p>
     </section>
   );

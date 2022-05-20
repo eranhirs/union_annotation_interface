@@ -9,7 +9,7 @@ const example1Step3Extra = <section> In this example:
         <dd className="col-sm-8">Conveys the same information as "thieves" in sentence 1, do <span className="fw-bold">not</span> highlight.</dd>
 
         <dt className="col-sm-4">* "crash 4x4 into store"</dt>
-        <dd className="col-sm-8">This is new information, you should highlight it. Notice how "store" is also highlighted in sentence 1, if possible you should avoid repetition.</dd>
+        <dd className="col-sm-8">This is new information, you should highlight it. Notice how "store" is also highlighted in sentence 1 to indicate that this word is not new. In this case, it still makes sense to highlight it since the crashing event is new and the store is its argument.</dd>
 
         <dt className="col-sm-4">* "grabbing jewelry and watches , before setting car ablaze."</dt>
         <dd className="col-sm-8">Conveys the same information included in sentence 1, do <span className="fw-bold">not</span> highlight.</dd>
@@ -18,7 +18,7 @@ const example1Step3Extra = <section> In this example:
 
 
 const example1 = new ExampleData(
-    "example #1",
+    "example",
     "After scooping up jewelry and watches estimated to be worth 2 million euros the thieves reversed their car out of the store and set fire to it before making off in another vehicle.",
     "Robbers crash 4x4 into store , grabbing jewelry and watches , before setting car ablaze.",
     1,
@@ -51,7 +51,7 @@ const example2Step3Extra = <section> In this example:
 
 
 const example2 = new ExampleData(
-    "example #2",
+    "example",
     "H-P announced that it will buy the outsourcing services company for $ 13.9 billion .",
     "Earlier this month Hewlett-Packard unveiled a bid of nearly $ 14 billion to purchase EDS .",
     2,

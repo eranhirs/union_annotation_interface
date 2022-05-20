@@ -5,6 +5,10 @@ import { SubmissionData } from '../models.jsx';
 import { ChooseSentenceStep, HighlightPhrasesStep, MergeSentencesStep, ReadSentencesStep } from './steps.jsx';
 import { Modal } from 'bootstrap';
 import { StepsComponent } from './steps_component.jsx';
+import { InstructionsModal } from './instructions_modal.jsx';
+import { questionMarkIcon, sendIcon } from './icons.jsx';
+import { QuestionMarkTooltip } from './question_mark_tooltip.jsx';
+import { HighlightTooltip } from './highlight_tooltip.jsx';
 
 function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const { sentence1Text, sentence2Text } = taskData;
@@ -110,12 +114,18 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
         }
     }
 
+    function onInstructionsClicked() {
+        instructionsModal.toggle()
+    }
+
     // we are highlighting the other than the chosen sentence
     const highlightedSentenceId = chosenSentenceId == 1 ? 2 : 1
 
+    const [ instructionsModal, setInstructionsModal ] = React.useState(null);
+
     return (
         <div>
-            <Instructions examples={examples}></Instructions>
+            <InstructionsModal examples={examples} instructionsModal={instructionsModal} setInstructionsModal={setInstructionsModal} />
             <div className="container actual-task">
                 {step == "1" && <ReadSentencesStep taskData={taskData} />}
                 {step == "2" && <ChooseSentenceStep taskData={taskData} setStep={setStep} setAllowedStep={setAllowedStep} chosenSentenceId={chosenSentenceId} setChosenSentenceId={setChosenSentenceIdAnResetNextSteps} />}
@@ -123,10 +133,19 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
                 {step == "4" && <MergeSentencesStep taskData={taskData} mergedText={mergedText} setMergedText={setMergedText} highlightedPhrases={highlightedPhrases} chosenSentenceId={chosenSentenceId} feedbackText={feedbackText} setFeedbackText={setFeedbackText} />}
 
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-4">
+                        {<button type="button" className="btn btn-secondary step-button instructions-button" onClick={() => onInstructionsClicked()}>Instructions {<QuestionMarkTooltip tooltipText={"Click to see instructions and examples"}/>}</button>}
+                    </div>
+                    <div className="col-4">
                         <StepsComponent step={step} setStep={setStep} allowedStep={allowedStep} componentId="task" />
-                        {step == lastStep &&  <button type="button" className="btn btn-primary step-button submit-button" onClick={() => onSubmitClicked(submissionData)}>Submit</button>}
-                        {step == lastStep &&  <button type="button" className="btn step-button submit-button" onClick={() => onSubmitClicked(submissionData, true)}>Skip</button>}
+                    </div>
+                    <div className="col-4">
+                        {step == lastStep &&  <button type="button" className="btn btn-primary step-button submit-button" onClick={() => onSubmitClicked(submissionData)}>
+                            <HighlightTooltip text={<span>Submit {sendIcon}</span>} tooltipText="Submit HIT" />
+                        </button>}
+                        {step == lastStep &&  <button type="button" className="btn btn-secondary step-button submit-button" onClick={() => onSubmitClicked(submissionData, true)}>
+                            <HighlightTooltip text={<span>Skip {sendIcon}</span>} tooltipText="Submit HIT, but skip the merge step if the sentences are unrelated" />
+                        </button>}
                     </div>
                 </div>
                 {submitValidationModalComponent}
