@@ -34,9 +34,15 @@ def build_on_remote_server() -> None:
     print("Building on remote server")
 
     # run build remotely
-    subprocess.Popen(
+    p = subprocess.Popen(
         f"ssh {os.getenv('SERVER_HOST')} 'cd {os.getenv('SERVER_PATH')} && git pull origin main && npm install && npm run build'",
-        shell=True).communicate()
+        shell=True)
+
+    p.communicate()
+
+    # Failed
+    if p.poll() != 0:
+        raise ValueError(f"Failed {p.poll()}")
 
 
 def get_remote_file_names() -> Dict[str, str]:
@@ -152,6 +158,8 @@ def publish_hit(index_html) -> Dict[str, Any]:
             }
         ]
 
+    TASK_DESC_TEXT = "In this task, you will be presented with two sentences that overlap in information, and you are tasked to merge the information of the two into a single sentence. More specifically, all of the information conveyed in each sentence should be contained in the merged sentence without redundancies. During this process, you first choose one sentence as a starting point and then highlight information that is new or has more specific wording in the other sentence. Lastly, using the chosen base sentence, add the highlighted information to create the merged sentence."
+
     # These parameters define the HIT that will be created
     # question is what we defined above
     # max_assignments is the # of unique Workers you're requesting
@@ -162,7 +170,7 @@ def publish_hit(index_html) -> Dict[str, Any]:
     response = mtc.create_hit(Question=html_question.get_as_xml(),
                               MaxAssignments=MAX_ASSIGNMENTS,
                               Title="Merge two sentences into one complete sentence (ID/UNION)",
-                              Description="NOTE: Annotators successfully completing this screening task would be presented with significantly larger batches and higher compensation. In this task, you will be presented with two sentences that overlap in information, and you are tasked to  merge them into one sentence. More specifically, all of the information conveyed in each sentence should be contained in the merged sentence without redundancies. During this process, you first choose one sentence as a starting point and then highlight information that is new or has more specific wording in the other sentence.",
+                              Description=f"NOTE: Annotators successfully completing this screening task would be presented with significantly larger batches and higher compensation. {TASK_DESC_TEXT}",
                               Keywords="nlp,language,fusion",
                               Reward="0.15",
                               LifetimeInSeconds=LIFETIME_IN_SECONDS,
