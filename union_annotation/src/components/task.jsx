@@ -110,14 +110,17 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const highlightedPhrasesCopy = markHighlightedPhrasesAsMerged(mergedText, highlightedPhrases)
 
     const highlightsNotIntegrated = highlightedPhrasesCopy.filter((highlightedPhrases) => highlightedPhrases['status'] == 'not-integrated')
+    const noHighlights = highlightedPhrasesCopy.length === 0
+    const mergedSentenceUnchanged = mergedText == sentence1Text || mergedText == sentence2Text
 
     // Validation
     const isMergedTextEmpty = !skipped && mergedText.trim() == "";
-    const isMergedSentenceUnchanged = !skipped && (mergedText == sentence1Text || mergedText == sentence2Text)
+    const isMergedSentenceUnchanged = !skipped && mergedSentenceUnchanged
     const isAllHighlightsIntegrated = !skipped && highlightsNotIntegrated.length > 0
+    const isSentenceChangedButNoHighlights = !skipped && noHighlights && !mergedSentenceUnchanged
     const isFeedbackEmpty = feedbackText.trim() == ""
-    const isSubmitDisabled = isFeedbackEmpty && (isMergedTextEmpty || isMergedSentenceUnchanged || skipped)
-    const shouldShowValidationModal = isMergedTextEmpty || isMergedSentenceUnchanged || isAllHighlightsIntegrated
+    const isSubmitDisabled = isFeedbackEmpty && (isMergedTextEmpty || isMergedSentenceUnchanged || isSentenceChangedButNoHighlights || skipped)
+    const shouldShowValidationModal = isMergedTextEmpty || isMergedSentenceUnchanged || isSentenceChangedButNoHighlights || isAllHighlightsIntegrated
 
 
     const submitValidationModalComponent = <div className="modal fade" ref={modalRef} id="submitValidationModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="submitValidationModelLabel" aria-hidden="true">
@@ -131,7 +134,8 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
                 {skipped && <section>You are trying to skip creating a merged sentence.</section>}
                 {isMergedTextEmpty && <section>You are trying to submit an empty merged sentence. If you believe you should skip creating a merged sentence, please use the skip checkbox instead. <br/><br/></section>}
                 {isMergedSentenceUnchanged && <section>You are trying to submit the base sentence without adding any information to it from the other sentence. This is possible only if the information in the former completely contains the information in the latter. <br/><br/></section>}
-                {isAllHighlightsIntegrated && <section>Some of your highlights could not be found in the merged sentence (colored {highlightTooltip}). You should remove unused highlights and avoid rephrasing if possible. <br/><br/></section>}
+                {isSentenceChangedButNoHighlights && <section>You made changes to the base sentence but you didn't use the highlighting tool, please go back to Step 3. <br/><br/></section>}
+                {isAllHighlightsIntegrated && <section>Some of your highlights could not be found in the merged sentence (colored {highlightTooltip}). You should remove unused highlights, unless you think we couldn't find them automatically (for example, if you rephrased the highlighted word). <br/><br/></section>}
                 {isSubmitDisabled && <section>Submit disabled. While this use case is allowed, you have to provide feedback explaining your decision.</section>}
                 {!isSubmitDisabled && <section>You can submit, but please carefully read the instructions beforehand if you are uncertain about this warning.</section>}
             </div>
@@ -209,8 +213,8 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
                         <StepsComponent step={step} setStep={setStep} allowedStep={allowedStep} componentId="task" />
                     </div>
                     <div className="col-4">
-                        <SubmitButton onSubmitWithLog={onSubmitClicked} submissionData={submissionData} isSubmitDisabled={step != lastStep} classNames="step-button submit-button" />
-                        <SkipButton onSubmitWithLog={onSubmitClicked} submissionData={submissionData} isSkipDisabled={false} classNames="step-button submit-button" />
+                        <SubmitButton onSubmitWithLog={onSubmitClicked} submissionData={submissionData} isSubmitDisabled={step != lastStep} classNames="step-button" />
+                        <SkipButton onSubmitWithLog={onSubmitClicked} submissionData={submissionData} isSkipDisabled={false} classNames="step-button" />
                         {/* {step == lastStep &&  <button type="button" className="btn btn-secondary step-button submit-button" onClick={() => onSubmitClicked(submissionData, true)}>
                             <HighlightTooltip text={<span>Skip {sendIcon}</span>} tooltipText="Submit HIT, but skip the merge step if the sentences are unrelated" />
                         </button>} */}

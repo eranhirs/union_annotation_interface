@@ -12,14 +12,14 @@ function SubmitButton({onSubmitWithLog, submissionData, isSubmitDisabled, classN
 
     const submitDisabledClassName = isSubmitDisabled ? "submit-disabled" : ""
 
-    return <button type="button" className={`btn btn-primary ${submitDisabledClassName} ${classNames}`} data-bs-dismiss="modal" onClick={() => onSubmitWithLog(submissionData)} disabled={isSubmitDisabled}>
+    return <button type="button" className={`btn btn-primary submit-button ${submitDisabledClassName} ${classNames}`} data-bs-dismiss="modal" onClick={() => onSubmitWithLog(submissionData)} disabled={isSubmitDisabled}>
         <HighlightTooltip text={<span className="tooltip-available">Submit {sendIcon}</span>} tooltipText={tooltipText} />
     </button>
 }
 
 function SkipButton({onSubmitWithLog, submissionData, isSkipDisabled, classNames=""}) {
 
-    return <button type="button" className={`btn btn-primary ${classNames}`} data-bs-dismiss="modal" onClick={() => onSubmitWithLog(submissionData, true)} disabled={isSkipDisabled}>
+    return <button type="button" className={`btn btn-primary submit-button ${classNames}`} data-bs-dismiss="modal" onClick={() => onSubmitWithLog(submissionData, true)} disabled={isSkipDisabled}>
         <HighlightTooltip text={<span>Skip {sendIcon}</span>} tooltipText={skipButtonTooltip} />
     </button>
 }
