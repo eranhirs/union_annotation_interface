@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 
-function HighlightTooltip({text, tooltipText}) {
+function HighlightTooltip({text, tooltipText, tooltipStart = 250}) {
     /*
     Tooltip class wrapper for highlighting needs
     */
@@ -15,7 +15,7 @@ function HighlightTooltip({text, tooltipText}) {
 
     return <OverlayTrigger
                 placement="top"
-                delay={{ show: 250, hide: 400 }}
+                delay={{ show: tooltipStart, hide: 400 }}
                 overlay={renderTooltip}
             >
         <span className="tooltip-available">{text}</span>

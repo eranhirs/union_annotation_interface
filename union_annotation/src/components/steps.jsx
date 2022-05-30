@@ -6,9 +6,12 @@ import { Modal } from 'bootstrap';
 import { findAllInText, phraseToWords } from '../utils.jsx';
 import { trashIcon } from './icons.jsx';
 import { HighlightTooltip } from './highlight_tooltip.jsx';
+import { AlertComponent, ShowTipsComponent } from './show_tips_component.jsx';
+import { Alert } from 'react-bootstrap';
+import { FeedbackComponent } from './feedback_component.jsx';
 
 
-function ReadSentencesStep({ taskData, isExample = false }) {
+function ReadSentencesStep({ taskData, showReadInstructions = false, isExample=false, setShowReadInstructions=null }) {
     const { sentence1Text, sentence2Text } = taskData;
     const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} />
     const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} />
@@ -16,8 +19,8 @@ function ReadSentencesStep({ taskData, isExample = false }) {
     return (
         <div className="row">
             <div className="col-12 fs-5">
-                <Directions title="Step 1">
-                    {!isExample && <span>Please read the instructions and examples, you can see them by clicking the instructions button below. <br/><br/></span>}
+                {showReadInstructions && <Alert onClose={() => setShowReadInstructions(false)} dismissible>Tip: You should read the instructions and examples, you can see them by clicking the instructions button below.</Alert>}
+                <Directions title={<span>Step 1 <ShowTipsComponent isExample={isExample} showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}/></span>}>
                     {readSentencesStepInstruction}
                 </Directions>
             </div>
@@ -60,7 +63,7 @@ function ChooseSentenceStep({ taskData, setStep, setAllowedStep, chosenSentenceI
     )
 }
 
-function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceId, highlightedPhrases, setHighlightedPhrases, isExample = false }) {
+function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceId, highlightedPhrases, setHighlightedPhrases, isExample = false, showReadInstructions = false, setShowReadInstructions=null }) {
     const { sentence1Text, sentence2Text } = taskData;
 
     const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={chosenSentenceId==1} highlighted={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} useIndicesForHighlight={chosenSentenceId != 1} setHighlightPhrase={setHighlightPhrase} readOnly={isExample} />
@@ -93,8 +96,8 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceI
     return (
         <div className="row">
             <div className="col-12 fs-5">
-                <Directions title="Step 3">
-                    {!isExample && <span>Please read the elaborated instructions for the highlight step (Step 3), you can see them by clicking the instructions button below. <br/><br/></span>}
+            {showReadInstructions && <Alert onClose={() => setShowReadInstructions(false)} dismissible>Tip: You should read the elaborated instructions for the highlight step (Step 3), you can see them by clicking the instructions button below.</Alert>}
+                <Directions title={<span>Step 3 <ShowTipsComponent isExample={isExample} showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}/></span>}>
                     {highlightPhrasesStepInstruction}
                 </Directions>
             </div>
@@ -109,7 +112,7 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceI
 }
 
 
-function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPhrases, mergedHighlightedPhrases, chosenSentenceId, feedbackText, setFeedbackText, skipped, setSkipped, isExample = false }) {
+function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPhrases, mergedHighlightedPhrases, chosenSentenceId, feedbackText, setFeedbackText, skipped, setSkipped, isExample = false, showReadInstructions = false, setShowReadInstructions=null }) {
     const { sentence1Text, sentence2Text } = taskData;
 
     const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} disabled={true} highlighted={chosenSentenceId==1} highlightedPhrases={highlightedPhrases} useIndicesForHighlight={chosenSentenceId != 1} mergedText={mergedText} />
@@ -123,25 +126,17 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
             value={mergedText}
             disabled={skipped}
         />}
-        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={skipped} onClick={() => setSkipped(!skipped)} />
-        <label className="form-check-label" htmlFor="flexCheckDefault">&nbsp;Skip:</label> I can't create a coherent merged sentence, because these two sentences have contradicting information or they refer to unrelated events (provide feedback instead)
     </section>
 
     const mergedSentenceHighlightable = <Sentence title="Merged sentence" text={mergedText} disabled={false} highlighted={false} useIndicesForHighlight={true} highlightedPhrases={mergedHighlightedPhrases} setHighlightPhrase={() => {}} readOnly={true} />
 
-    const feedbackTextComponent = <section className="feedback-component">
-            <h5 className="card-title">Feedback {!skipped ? "(optional)" : ""}</h5>
-            <textarea
-            onChange={(e) => setFeedbackText(e.target.value)}
-            placeholder="Please provide here feedback about the task"
-            value={feedbackText} />
-        </section>
+    const feedbackTextComponent = <FeedbackComponent skipped={skipped} feedbackText={feedbackText} setFeedbackText={setFeedbackText} />
 
     return (
         <div className="row merge-sentences-step" key={highlightedPhrases}>
             <div className="col-12 fs-5">
-                <Directions title="Step 4">
-                {!isExample && <span>Please read the elaborated instructions for the merge step (Step 4), you can see them by clicking the instructions button below. <br/><br/></span>}
+                {showReadInstructions && <Alert onClose={() => setShowReadInstructions(false)} dismissible>Tip: You should read the elaborated instructions for the merge step (Step 4), you can see them by clicking the instructions button below.</Alert>}
+                <Directions title={<span>Step 4 <ShowTipsComponent isExample={isExample} showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}/></span>}>
                     {mergeSentencesStepInstruction}
                 </Directions>
             </div>

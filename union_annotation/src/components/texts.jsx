@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { SubmitButton } from './buttons';
 import { HighlightTooltip } from './highlight_tooltip';
 import { questionMarkIcon } from './icons';
 
 /* Initial instructions */
-const shortDescription = "In this task, you will be presented with two sentences that overlap in information, and you are tasked to merge the information of the two into a single sentence. More specifically, all of the information conveyed in each sentence should be contained in the merged sentence without redundancies. During this process, you first choose one sentence as a starting point and then highlight information that is new or has more specific wording in the other sentence. Lastly, using the chosen base sentence, add the highlighted information to create the merged sentence.";
+const submitButton = <SubmitButton onSubmitWithLog={undefined} submissionData={undefined} isSubmitDisabled={true}/>
+const shortDescription = <span>In this task, you will be presented with two sentences that overlap in information, and you are tasked to merge the information of the two into a single sentence. More specifically, all of the information conveyed in each sentence should be contained in the merged sentence without redundancies. During this process, you first choose one sentence as a starting point and then highlight information that is new or has more specific wording in the other sentence. Lastly, using the chosen base sentence, add the highlighted information to create the merged sentence. When finished click the {submitButton} button.</span>;
+const skipButtonTooltip = "You can skip at any step if you think the two sentences are unrelated"
 
 const elaboratedDescription = " In the merge process, you should highlight differences between the sentences.";
 
@@ -30,4 +33,4 @@ const contradictingInformationDescription = "Information conveyed in one sentenc
 
 
 
-export { shortDescription, elaboratedDescription, readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, newInformationDescription, entailingInformationDescription, contradictingInformationDescription, fullMatchDescription, noMatchDescription, partialMatchDescription, repetitionWarningDescription, highlightTooltip, partialHighlightTooltip, fullHighlightTooltip};
+export { shortDescription, elaboratedDescription, readSentencesStepInstruction, chooseSentenceStepInstruction, highlightPhrasesStepInstruction, mergeSentencesStepInstruction, newInformationDescription, entailingInformationDescription, contradictingInformationDescription, fullMatchDescription, noMatchDescription, partialMatchDescription, repetitionWarningDescription, highlightTooltip, partialHighlightTooltip, fullHighlightTooltip, skipButtonTooltip};

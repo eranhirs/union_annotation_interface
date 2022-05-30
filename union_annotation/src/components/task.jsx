@@ -11,6 +11,8 @@ import { QuestionMarkTooltip } from './question_mark_tooltip.jsx';
 import { HighlightTooltip } from './highlight_tooltip.jsx';
 import { fullMatchDescription, highlightTooltip, noMatchDescription } from './texts.jsx';
 import { findAllInText, phraseToWords } from '../utils.jsx';
+import { SkipButton, SubmitButton } from './buttons.jsx';
+import { FeedbackComponent } from './feedback_component.jsx';
 
 function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const { sentence1Text, sentence2Text } = taskData;
@@ -135,7 +137,7 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
             </div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => onSubmitWithLog(submissionData)} disabled={isSubmitDisabled}>Submit {sendIcon}</button>
+                <SubmitButton onSubmitWithLog={onSubmitWithLog} submissionData={submissionData} isSubmitDisabled={isSubmitDisabled} />
             </div>
             </div>
         </div>
@@ -150,12 +152,15 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
-                {isFeedbackEmpty && <section>Please add feedback to explain why are you skipping this example.</section>}
-                {!isFeedbackEmpty && <section>You are about to skip this task. This is encouraged if you can't merge the two sentences and have provided proper feedback.</section>}
+                {isFeedbackEmpty && <section>
+                    Please explain in details why this example should be skipped.
+                </section>}
+                {!isFeedbackEmpty && <section>You are about to skip this example.</section>}
+                <div className="row"><FeedbackComponent skipped={true} feedbackText={feedbackText} setFeedbackText={setFeedbackText} />                    </div>
             </div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => onSubmitWithLog(submissionData)} disabled={isFeedbackEmpty}>Skip</button>
+                <SkipButton onSubmitWithLog={onSubmitWithLog} submissionData={submissionData} isSkipDisabled={isFeedbackEmpty}/>
             </div>
             </div>
         </div>
@@ -163,14 +168,14 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
 
     function onSubmitClicked(submissionData, skip=false) {
         if (skip == false) {
-            // submissionData.skipped = false;
+            submissionData.skipped = false;
             if (shouldShowValidationModal) {
                 submitValidationModal.toggle()
             } else {
                 onSubmitWithLog(submissionData)
             }
         } else {
-            // submissionData.skipped = true;            
+            submissionData.skipped = true;
             skipValidationModal.toggle()
         }
     }
@@ -185,15 +190,16 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const highlightedSentenceId = chosenSentenceId == 1 ? 2 : 1
 
     const [ instructionsModal, setInstructionsModal ] = React.useState(null);
+    const [ showReadInstructions, setShowReadInstructions ] = useState(true);
 
     return (
         <div>
             <InstructionsModal examples={examples} instructionsModal={instructionsModal} setInstructionsModal={setInstructionsModal} />
             <div className="container actual-task">
-                {step == "1" && <ReadSentencesStep taskData={taskData} />}
+                {step == "1" && <ReadSentencesStep taskData={taskData} showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions} />}
                 {step == "2" && <ChooseSentenceStep taskData={taskData} setStep={setStep} setAllowedStep={setAllowedStep} chosenSentenceId={chosenSentenceId} setChosenSentenceId={setChosenSentenceIdAnResetNextSteps} />}
-                {step == "3" && <HighlightPhrasesStep taskData={taskData} chosenSentenceId={chosenSentenceId} highlightedSentenceId={highlightedSentenceId} highlightedPhrases={highlightedPhrases} setHighlightedPhrases={setHighlightedPhrases} />}
-                {step == "4" && <MergeSentencesStep taskData={taskData} mergedText={mergedText} setMergedText={setMergedText} highlightedPhrases={highlightedPhrasesCopy} chosenSentenceId={chosenSentenceId} feedbackText={feedbackText} setFeedbackText={setFeedbackText} skipped={skipped} setSkipped={setSkipped} />}
+                {step == "3" && <HighlightPhrasesStep taskData={taskData} chosenSentenceId={chosenSentenceId} highlightedSentenceId={highlightedSentenceId} highlightedPhrases={highlightedPhrases} setHighlightedPhrases={setHighlightedPhrases}  showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}  />}
+                {step == "4" && <MergeSentencesStep taskData={taskData} mergedText={mergedText} setMergedText={setMergedText} highlightedPhrases={highlightedPhrasesCopy} chosenSentenceId={chosenSentenceId} feedbackText={feedbackText} setFeedbackText={setFeedbackText} skipped={skipped} setSkipped={setSkipped}  showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}  />}
 
                 <div className="row">
                     <div className="col-4">
@@ -203,9 +209,8 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
                         <StepsComponent step={step} setStep={setStep} allowedStep={allowedStep} componentId="task" />
                     </div>
                     <div className="col-4">
-                        {step == lastStep &&  <button type="button" className="btn btn-primary step-button submit-button" onClick={() => onSubmitClicked(submissionData)}>
-                            <HighlightTooltip text={<span>Submit {sendIcon}</span>} tooltipText="Submit HIT" />
-                        </button>}
+                        <SubmitButton onSubmitWithLog={onSubmitClicked} submissionData={submissionData} isSubmitDisabled={step != lastStep} classNames="step-button submit-button" />
+                        <SkipButton onSubmitWithLog={onSubmitClicked} submissionData={submissionData} isSkipDisabled={false} classNames="step-button submit-button" />
                         {/* {step == lastStep &&  <button type="button" className="btn btn-secondary step-button submit-button" onClick={() => onSubmitClicked(submissionData, true)}>
                             <HighlightTooltip text={<span>Skip {sendIcon}</span>} tooltipText="Submit HIT, but skip the merge step if the sentences are unrelated" />
                         </button>} */}

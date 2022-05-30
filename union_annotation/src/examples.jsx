@@ -18,6 +18,7 @@ const example1Step3Extra = <section> In this example:
 
 
 const example1 = new ExampleData(
+    "1",
     "example",
     "After scooping up jewelry and watches estimated to be worth 2 million euros the thieves reversed their car out of the store and set fire to it before making off in another vehicle.",
     "Robbers crash 4x4 into store , grabbing jewelry and watches , before setting car ablaze.",
@@ -40,6 +41,7 @@ const example1 = new ExampleData(
         // { "phrase": "crashing 4x4 into store", "start": 6, "end": 29, "className": "full-highlight", "tooltip": fullMatchDescription }
     ],
     "After crashing 4x4 into store and scooping up jewelry and watches estimated to be worth 2 million euros the thieves reversed their car out of the store and set fire to it before making off in another vehicle.",
+    null,    
     "In this example, we chose Sentence 1.",
     example1Step3Extra,
     <span>In this example, we add "crash 4x4 into store" into the merged sentence. Note how the words that were copy pasted are now {fullHighlightTooltip}, while the word "crash" was rephrased to "crashing", which is why it is still {highlightTooltip}. Please rephrase only if necessary to make the sentence grammatical or fluent.</span>
@@ -63,6 +65,7 @@ const example2Step3Extra = <section> In this example:
 
 
 const example2 = new ExampleData(
+    "2",
     "example",
     "H-P announced that it will buy the outsourcing services company for $ 13.9 billion .",
     "Earlier this month Hewlett-Packard unveiled a bid of nearly $ 14 billion to purchase EDS .",
@@ -79,8 +82,9 @@ const example2 = new ExampleData(
     [
         { "phrase": "the outsourcing services company", "start": 86, "end": 118, "className": "full-highlight", "tooltip": fullMatchDescription },
         { "phrase": "of $ 13.9 billion", "start": 50, "end": 67, "className": "full-highlight", "tooltip": fullMatchDescription }
-    ],    
+    ],
     "Earlier this month Hewlett-Packard unveiled a bid of $ 13.9 billion to purchase EDS , the outsourcing services company .",
+    null,    
     "In this example, we chose Sentence 2.",
     example2Step3Extra,
     'In this example, we replace "nearly $ 14 billion" with "$ 13.9 billion". Also, we add "the outsourcing services company".'
@@ -97,6 +101,7 @@ const example3Step3Extra = <section> In this example:
 
 
 const example3 = new ExampleData(
+    "3",
     "a contradiction example",
     "Video of Brooklyn Mother of 13 Zurana Horton shot and killed in a gang shooting was revealed Thursday .",
     "A shocking video released for the first time Thursday captures the moment a Brooklyn mother of 12 was killed in a gang shootout as she picked her daughter up from school .",
@@ -109,16 +114,36 @@ const example3 = new ExampleData(
         { "phrase": "of 13", "start": 25, "end": 30, "sentenceId": 1 }
     ],
     null,
+    null,
     "In this example, we chose Sentence 2.",
     example3Step3Extra,
     null
+);
+
+const example4 = new ExampleData(
+    "4",
+    "example",
+    "Libby was indicted in October on five counts of perjury, making false statements and obstruction of justice in the course of Special Counsel Patrick Fitzgerald's investigation into the leak of Plame's identity to the media.",
+    "The newspaper reported that Woodward told prosecutor Patrick Fitzgerald, who is investigating the leak of Plame's identity, that the official talked to him about Plame in mid-June 2003.",
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    "In this example, both sentences refer to \"Patrick Fitzgerald\" and the \"leak of Plame's identity\", but the first talks about Libby's indiciment and the second talks about Woodward. It is impossible to create a coherent and comprehensible union, which means you should use the skip button.",
+    null,
+    null,
+    null,
+    1
 );
 
 
 const examples = [
     example1,
     example2,
-    example3
+    example3,
+    example4
 ]
 
 export { examples };

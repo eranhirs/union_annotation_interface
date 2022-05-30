@@ -131,11 +131,6 @@
      cursor: pointer;
  }
 
- /* Add a cursor on the button to avoid the tooltip converting it to a help cursor */
- .submit-button:hover span {
-    cursor: pointer;
-}
-
  /* Avoid blue highlighting */
  .highlightable-container.highlightable > span::selection {
     color: inherit;
@@ -177,4 +172,29 @@
 .feedback-component {
     margin-top: 10px;
 
+}
+
+/* When submit disabled, change cursor to help so people know they can hover */
+.submit-disabled , .submit-disabled span {
+    cursor: help !important;
+}
+
+/* Add a cursor on the button to avoid the tooltip converting it to a help cursor */
+.submit-button span {
+    cursor: pointer;
+}
+
+/* Enable highlight to show when hovering over disabled buttons */
+.step-label, .submit-button {
+    pointer-events: all !important;
+}
+
+/* Change cursor for the link to "show tips" */
+.show-tips-link {
+    cursor: pointer;
+}
+
+/* Make sure feedback textarea  is full in skip modal */
+.feedback-textarea {
+    width: 100%;
 }

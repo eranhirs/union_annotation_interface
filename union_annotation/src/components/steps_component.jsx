@@ -1,16 +1,50 @@
-function StepsComponent({step, setStep, allowedStep, componentId}) {
+import * as React from "react";
+import { HighlightTooltip } from "./highlight_tooltip";
+
+function StepsComponent({step, setStep, allowedStep, componentId, isExample=false, onStepClickedCallback=null}) {
+
+    function onStepClicked(stepId) {
+        setStep(stepId);
+
+        if (onStepClickedCallback != null) {
+            onStepClickedCallback()
+        }
+    }
+
+    function createStepCheckbox(stepId) {
+        const isDisabled = allowedStep < stepId;
+        return <input type="radio" className="btn-check" name={`${componentId}-btnradio`} id={`${componentId}-btnradio${stepId}`} autocomplete="off" checked={step == stepId ? "true" : ""} disabled={isDisabled ? "true" : ""} onClick={() => onStepClicked(stepId)} />
+    }
+
+    function createStep(stepId) {
+        const isDisabled = allowedStep < stepId;
+
+        let tooltipText = `This button is disabled because you haven't completed the previous steps`
+        if (isExample) {
+            tooltipText = `This button is disabled because in this example you should skip`
+        }
+        const stepText = `${stepId}`
+        
+        let stepLabel = stepText
+        if (isDisabled) {
+            stepLabel = <HighlightTooltip text={stepText} tooltipText={tooltipText} />
+        }
+        return <label className="btn btn-outline-primary step-label" for={`${componentId}-btnradio${stepId}`}>{stepLabel}</label>
+    }
+
+
     return <div className={`btn-group steps-btn-group`} role="group" aria-label="Switch steps">
-        <input type="radio" className="btn-check" name={`${componentId}-btnradio`} id={`${componentId}-btnradio1`} autocomplete="off" checked={step == 1 ? "true" : ""} disabled={allowedStep >= 1 ? "" : "true"} onClick={() => setStep(1)} />
-        <label className="btn btn-outline-primary" for={`${componentId}-btnradio1`}>1</label>
+        {createStepCheckbox(1)}
+        {createStep(1)}
 
-        <input type="radio" className="btn-check" name={`${componentId}-btnradio`} id={`${componentId}-btnradio2`} autocomplete="off" checked={step == 2 ? "true" : ""} disabled={allowedStep >= 2 ? "" : "true"} onClick={() => setStep(2)} />
-        <label className="btn btn-outline-primary" for={`${componentId}-btnradio2`}>2</label>
+        {createStepCheckbox(2)}
+        {createStep(2)}
 
-        <input type="radio" className="btn-check" name={`${componentId}-btnradio`} id={`${componentId}-btnradio3`} autocomplete="off" checked={step == 3 ? "true" : ""} disabled={allowedStep >= 3 ? "" : "true"} onClick={() => setStep(3)} />
-        <label className="btn btn-outline-primary" for={`${componentId}-btnradio3`}>3</label>
+        {createStepCheckbox(3)}
+        {createStep(3)}
 
-        <input type="radio" className="btn-check" name={`${componentId}-btnradio`} id={`${componentId}-btnradio4`} autocomplete="off" checked={step == 4 ? "true" : ""} disabled={allowedStep >= 4 ? "" : "true"} onClick={() => setStep(4)} />
-        <label className="btn btn-outline-primary" for={`${componentId}-btnradio4`}>4</label>
+        {createStepCheckbox(4)}
+        {createStep(4)}
     </div>
 }
 
