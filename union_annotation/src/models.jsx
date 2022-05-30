@@ -17,11 +17,11 @@ class ExampleData {
         this.sentence2Text = sentence2Text;
         this.chosenSentenceId = chosenSentenceId;
         this.highlightedSentenceId = highlightedSentenceId;
-        this.highlightedPhrases = highlightedPhrases;        
-        this.highlightedPhrasesCopy = highlightedPhrasesCopy; // With tooltips
-        this.mergedHighlightedPhrases = mergedHighlightedPhrases;
+        this.highlightedPhrases = highlightedPhrases; // Consecutive highlights (step 3)
+        this.highlightedPhrasesCopy = highlightedPhrasesCopy; // Broken per word (step 4)
+        this.mergedHighlightedPhrases = mergedHighlightedPhrases; // To highlight stuff on the merged sentence
         this.mergedSentenceText = mergedSentenceText;
-        this.step1Extra = step1Extra;        
+        this.step1Extra = step1Extra;
         this.step2Extra = step2Extra;
         this.step3Extra = step3Extra;
         this.step4Extra = step4Extra;

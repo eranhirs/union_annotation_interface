@@ -31,7 +31,8 @@
     float: left;
 }
 
- .submit-button {
+/* Move submit buttons that show in the step phase to the right */
+ .submit-button.step-button {
      float: right;
  }
 

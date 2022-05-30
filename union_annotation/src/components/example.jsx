@@ -21,8 +21,8 @@ function ListItem({ currStep, step, itemId, children }) {
     )
 }
 
-function Example({ exampleId, exampleData, scrollToExampleTop }) {
-    const [step, setStep] = useState(1);
+function Example({ exampleId, exampleData, scrollToExampleTop, initialStep=1 }) {
+    const [step, setStep] = useState(initialStep);
     const { mergedSentenceText, step1Extra, step2Extra, step3Extra, step4Extra } = exampleData;
     let { allowedLastStep } = exampleData
     const lastStep = 4;

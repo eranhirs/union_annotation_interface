@@ -3,17 +3,15 @@ import { fullHighlightTooltip, fullMatchDescription, highlightTooltip, noMatchDe
 import { ExampleData } from './models.jsx';
 
 // Example 1
-const example1Step3Extra = <section> In this example:
-    <dl className="row">
-        <dt className="col-sm-4">* "Robbers"</dt>
-        <dd className="col-sm-8">Conveys the same information as "thieves" in sentence 1, do <span className="fw-bold">not</span> highlight.</dd>
-
-        <dt className="col-sm-4">* "crash 4x4 into store"</dt>
-        <dd className="col-sm-8">This is new information, you should highlight it. Notice how "store" is also highlighted in sentence 1 to indicate that this word is not new. In this case, it still makes sense to highlight it since the crashing event is new and the store is its argument.</dd>
-
-        <dt className="col-sm-4">* "grabbing jewelry and watches , before setting car ablaze."</dt>
-        <dd className="col-sm-8">Conveys the same information included in sentence 1, do <span className="fw-bold">not</span> highlight.</dd>
-    </dl>
+const example1Step3Extra = <section>
+    Highlights explanation:
+    <br/> a. The information that "Robbers crash 4x4 into store" is new information and should be highlighted.
+    <br/> b. The information that "Robbers" were "grabbing jewelry and watches , before setting car ablaze", conveys the same information included in sentence 1, and should <span className="fw-bold">not</span> be highlighted.
+    <br/><br/>
+    We should notice a few things:
+    <br/>a. You might think that "Robbers" and "store" were already mentioned in Sentence 1 and hence are not new. However, we are highlighting pieces of information and not words: the information that the "Robbers" were those that crashed is new, and the fact that the crash was "into store" is new, so they are part of the highlight.
+    Hypothetically, if both sentences mentioned a "big store" instead of simply mentioning a "store", we would not highlight the word "big", because this is not part of the new crash information.
+    <br/>b. The word "store" is also highlighted in sentence 1 to help you notice that this word is not new. However, the word "thieves" was not highlighted in sentence 1, because we are using exact match and we don't catch everything.
 </section>
 
 
@@ -25,9 +23,10 @@ const example1 = new ExampleData(
     1,
     2,
     [
-        { "phrase": "crash 4x4 into store", "start": 8, "end": 28 }
+        { "phrase": "Robbers crash 4x4 into store", "start": 0, "end": 28 }
     ],
     [
+        { "phrase": "Robbers", "start": 0, "end": 7, "tooltip": noMatchDescription },
         { "phrase": "crash", "start": 8, "end": 13, "tooltip": noMatchDescription },
         { "phrase": "4x4", "start": 14, "end": 17, "className": "full-highlight", "tooltip": fullMatchDescription },
         { "phrase": "into", "start": 18, "end": 22, "className": "full-highlight", "tooltip": fullMatchDescription },
@@ -44,7 +43,13 @@ const example1 = new ExampleData(
     null,    
     "In this example, we chose Sentence 1.",
     example1Step3Extra,
-    <span>In this example, we add "crash 4x4 into store" into the merged sentence. Note how the words that were copy pasted are now {fullHighlightTooltip}, while the word "crash" was rephrased to "crashing", which is why it is still {highlightTooltip}. Please rephrase only if necessary to make the sentence grammatical or fluent.</span>
+    <span>In this example, we attached "crashing 4x4 into store" into the description of the thieves actions.<br/><br/>
+    We should notice a few things:
+    <br/> a. The words that were copied as-is are now {fullHighlightTooltip}.
+    <br/> b. The word "crash" was rephrased to "crashing", which is why it is still {highlightTooltip}. You should rephrase only if necessary to make the sentence grammatical or fluent.
+    <br/> c. The word "Robbers" was not used, because it doesn't provide new information over "thieves".
+    <br/><br/>The system will raise a warning if it sees {highlightTooltip} highlights, but it is safe to ignore under the circumstances above.
+    </span>
 );
 
 // Example 2
@@ -120,6 +125,8 @@ const example3 = new ExampleData(
     null
 );
 
+// Example 4
+
 const example4 = new ExampleData(
     "4",
     "example",
@@ -138,12 +145,140 @@ const example4 = new ExampleData(
     1
 );
 
+// Example 5
+
+const example5 = new ExampleData(
+    "5",
+    "example",
+    "T - Mobile continues to add to its growing line - up of 4G LTE devices by partnering with BlackBerry to bring customers the BlackBerry Q10 .",
+    "T - Mobile today announced that the BlackBerry Q10 will be added to its growing 4G LTE smartphone portfolio .",
+    1,
+    2,
+    [
+        {
+            "phrase": "T - mobile today announced", "start": 0, "end": 26
+        }
+    ],
+    [
+        {
+            "phrase": "T", "start": 0, "end": 1, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "-", "start": 2, "end": 3, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "Mobile", "start": 4, "end": 10, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "today", "start": 11, "end": 16, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "announced", "start": 17, "end": 27, "className": "full-highlight", "tooltip": fullMatchDescription
+        }
+    ],
+    [],
+    "T - Mobile today announced that it continues to add to its growing line - up of 4G LTE devices by partnering with BlackBerry to bring customers the BlackBerry Q10 .",
+    null,
+    "In this example, we chose Sentence 1.",
+    <span>
+        We should notice a few things:
+        <br/>a. At first glance, it seems we should highlight "4G LTE smartphone portfolio", because it is more specific than "4G LTE devices". However, Sentence 1 later mentions BlackBerry which is more specific than smartphone, so the phrase "4G LTE smartphone portfolio" doesn't actually add new information to the base sentence and highlighting it would be a mistake.
+        <br/>b. "T - mobile" is also highlighted, even though it is already mentioned in Sentence 1. Highlighting only "today announced" would be a mistake, because the fact that T-mobile announced is new (we are highlighting information, not words).
+        <br/>c. "that the blackberry Q10 ..." is not highlighted. It is not new, and it is a separated clause from the announcement, so it should <b>not</b> be highlighted.
+    </span>,
+    null,
+    4
+);
+
+// Example 6
+
+const example6 = new ExampleData(
+    "6",
+    "example",
+    "A savvy band of jewel thieves , armed with guns and some posing as women , have struck in the heart of the city 's golden triangle of luxury shops , stealing more than e85 million worth of diamonds , rings and watches from a posh Harry Winston boutique .",
+    "Three or four robbers burst into the store on ritzy Avenue Montaigne near the Champs-Elysees late Thursday afternoon and stole watches , rings and necklaces .",
+    1,
+    2,
+    [
+        {
+            "phrase": "Three or four robbers", "start": 0, "end": 21
+        },
+        {
+            "phrase": "on ritzy Avenue Montaigne near the Champs-Elysees late Thursday afternoon", "start": 43, "end": 106
+        },
+        {
+            "phrase": "necklaces", "start": 147, "end": 156
+        }
+    ],
+    [
+        {
+            "phrase": "Three", "start": 0, "end": 5, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "or", "start": 6, "end": 8, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "four", "start": 9, "end": 13, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "robbers", "start": 14, "end": 21, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "on", "start": 43, "end": 45, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "ritzy", "start": 46, "end": 51, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "Avenue", "start": 52, "end": 58, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "Montaigne", "start": 59, "end": 68, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "near", "start": 69, "end": 73, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "the", "start": 74, "end": 77, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "Champs-Elysees", "start": 78, "end": 92, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "late", "start": 93, "end": 97, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "Thursday", "start": 98, "end": 106, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "afternoon", "start": 107, "end": 116, "className": "full-highlight", "tooltip": fullMatchDescription
+        },
+        {
+            "phrase": "necklaces", "start": 147, "end": 156, "className": "full-highlight", "tooltip": fullMatchDescription
+        }
+    ],
+    [],
+    "A savvy band of three or four jewel robbers , armed with guns and some posing as women , have struck in the heart of the city 's golden triangle of luxury shops , on ritzy Avenue Montaigne near the Champs-Elysees late Thursday afternoon, stealing more than e85 million worth of diamonds , necklaces, rings and watches from a posh Harry Winston boutique.",
+    null,
+    "In this example, we chose Sentence 1.",
+    null,
+    <span>
+        We should notice a few things about the merged sentence:
+        <br/>a. "Three or four robbers" is new and is attached to the description of the band.
+        <br/>b. "on ritzy Avenue ..." is attached to the "city's golden triangle of luxury shops" in such a way that the description of the location is adjacent. Attaching it to the end of the sentence would be considered incoherent.
+        <br/>c. "necklaces" is a new item attached to the list of stolen items. This is allowed only because it seems both sentences describe a list of the same stolen items.
+    </span>,
+    4
+);
+
 
 const examples = [
     example1,
     example2,
     example3,
-    example4
+    example4,
+    example5,
+    example6,
 ]
 
 export { examples };

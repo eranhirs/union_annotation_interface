@@ -13,11 +13,13 @@ function findAllInText(textToSearchFor, textToSearchIn) {
 
     // Searching for "" doesn't make sense & stuck the browser
     if (textToSearchFor != "") {
-        // Regex explanation: \W indicates not a word , and we also want to catch cases where it is at the beginning or end of the sentence.
+        // Regex explanation: We are searching for complete words, so \W is used to indicate a character which is not an alpha letter , and we also want to catch cases where it is at the beginning or end of the sentence.
         const regex = new RegExp(`(^|\\W)${escapeRegExp(textToSearchFor)}(\\W|$)`, "gi");
         let result;
         while ( result = regex.exec(textToSearchIn) ) {
-            ranges.push([result.index + 1, result.index + textToSearchFor.length + 1]);
+            // The +1 is because of the \W, we shouldn't add +1 if it's the beginning of a sentence
+            const startIndex = result.index == 0 ? 0 : result.index + 1
+            ranges.push([startIndex, startIndex + textToSearchFor.length]);
         }
     }
 
