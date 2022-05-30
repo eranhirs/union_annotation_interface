@@ -27,7 +27,7 @@
     text-align: center;
 }
 
-.instructions-button {
+.step-button.instructions-button {
     float: left;
 }
 

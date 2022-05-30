@@ -9,9 +9,10 @@ import { HighlightTooltip } from './highlight_tooltip.jsx';
 import { AlertComponent, ShowTipsComponent } from './show_tips_component.jsx';
 import { Alert } from 'react-bootstrap';
 import { FeedbackComponent } from './feedback_component.jsx';
+import { InstructionsButton } from './buttons.jsx';
 
 
-function ReadSentencesStep({ taskData, showReadInstructions = false, isExample=false, setShowReadInstructions=null }) {
+function ReadSentencesStep({ taskData, showReadInstructions = false, isExample=false, setShowReadInstructions=null, onInstructionsClicked=null }) {
     const { sentence1Text, sentence2Text } = taskData;
     const sentence1 = <Sentence title="Sentence 1" text={sentence1Text} />
     const sentence2 = <Sentence title="Sentence 2" text={sentence2Text} />
@@ -19,7 +20,7 @@ function ReadSentencesStep({ taskData, showReadInstructions = false, isExample=f
     return (
         <div className="row">
             <div className="col-12 fs-5">
-                {showReadInstructions && <Alert onClose={() => setShowReadInstructions(false)} dismissible>Tip: You should read the instructions and examples, you can see them by clicking the instructions button below.</Alert>}
+                {showReadInstructions && <Alert onClose={() => setShowReadInstructions(false)} dismissible>Tip: You should first read the instructions and examples, you can see them by clicking the Instructions button below.</Alert>}
                 <Directions title={<span>Step 1 <ShowTipsComponent isExample={isExample} showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}/></span>}>
                     {readSentencesStepInstruction}
                 </Directions>
@@ -96,7 +97,7 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceI
     return (
         <div className="row">
             <div className="col-12 fs-5">
-            {showReadInstructions && <Alert onClose={() => setShowReadInstructions(false)} dismissible>Tip: You should read the elaborated instructions for the highlight step (Step 3), you can see them by clicking the instructions button below.</Alert>}
+            {showReadInstructions && <Alert onClose={() => setShowReadInstructions(false)} dismissible>Tip: You should read the elaborated instructions for the highlight step (Step 3), you can see them by clicking the Instructions button below.</Alert>}
                 <Directions title={<span>Step 3 <ShowTipsComponent isExample={isExample} showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}/></span>}>
                     {highlightPhrasesStepInstruction}
                 </Directions>
@@ -135,7 +136,7 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
     return (
         <div className="row merge-sentences-step" key={highlightedPhrases}>
             <div className="col-12 fs-5">
-                {showReadInstructions && <Alert onClose={() => setShowReadInstructions(false)} dismissible>Tip: You should read the elaborated instructions for the merge step (Step 4), you can see them by clicking the instructions button below.</Alert>}
+                {showReadInstructions && <Alert onClose={() => setShowReadInstructions(false)} dismissible>Tip: You should read the elaborated instructions for the merge step (Step 4), you can see them by clicking the Instructions button below.</Alert>}
                 <Directions title={<span>Step 4 <ShowTipsComponent isExample={isExample} showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}/></span>}>
                     {mergeSentencesStepInstruction}
                 </Directions>

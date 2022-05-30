@@ -1,4 +1,5 @@
 import { HighlightTooltip } from "./highlight_tooltip";
+import { QuestionMarkTooltip } from "./question_mark_tooltip";
 import { skipButtonTooltip } from "./texts";
 
 const React = require("react");
@@ -24,5 +25,9 @@ function SkipButton({onSubmitWithLog, submissionData, isSkipDisabled, classNames
     </button>
 }
 
+function InstructionsButton({ onInstructionsClicked, classNames="", showQuestionMark=false }) {
+    return <button type="button" className={`btn btn-secondary instructions-button ${classNames}`} onClick={() => onInstructionsClicked()}>Instructions {showQuestionMark && <QuestionMarkTooltip tooltipText={"Click to see instructions and examples"}/>}</button>
+}
 
-export { SubmitButton, SkipButton };
+
+export { SubmitButton, SkipButton, InstructionsButton };

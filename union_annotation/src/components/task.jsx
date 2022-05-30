@@ -11,7 +11,7 @@ import { QuestionMarkTooltip } from './question_mark_tooltip.jsx';
 import { HighlightTooltip } from './highlight_tooltip.jsx';
 import { fullMatchDescription, highlightTooltip, noMatchDescription } from './texts.jsx';
 import { findAllInText, phraseToWords } from '../utils.jsx';
-import { SkipButton, SubmitButton } from './buttons.jsx';
+import { InstructionsButton, SkipButton, SubmitButton } from './buttons.jsx';
 import { FeedbackComponent } from './feedback_component.jsx';
 
 function Task({ taskData, isOnboarding, onSubmit, onError }) {
@@ -200,14 +200,14 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
         <div>
             <InstructionsModal examples={examples} instructionsModal={instructionsModal} setInstructionsModal={setInstructionsModal} />
             <div className="container actual-task">
-                {step == "1" && <ReadSentencesStep taskData={taskData} showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions} />}
+                {step == "1" && <ReadSentencesStep taskData={taskData} showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions} onInstructionsClicked={onInstructionsClicked} />}
                 {step == "2" && <ChooseSentenceStep taskData={taskData} setStep={setStep} setAllowedStep={setAllowedStep} chosenSentenceId={chosenSentenceId} setChosenSentenceId={setChosenSentenceIdAnResetNextSteps} />}
                 {step == "3" && <HighlightPhrasesStep taskData={taskData} chosenSentenceId={chosenSentenceId} highlightedSentenceId={highlightedSentenceId} highlightedPhrases={highlightedPhrases} setHighlightedPhrases={setHighlightedPhrases}  showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}  />}
                 {step == "4" && <MergeSentencesStep taskData={taskData} mergedText={mergedText} setMergedText={setMergedText} highlightedPhrases={highlightedPhrasesCopy} chosenSentenceId={chosenSentenceId} feedbackText={feedbackText} setFeedbackText={setFeedbackText} skipped={skipped} setSkipped={setSkipped}  showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}  />}
 
                 <div className="row">
                     <div className="col-4">
-                        {<button type="button" className="btn btn-secondary step-button instructions-button" onClick={() => onInstructionsClicked()}>Instructions {<QuestionMarkTooltip tooltipText={"Click to see instructions and examples"}/>}</button>}
+                        <InstructionsButton onInstructionsClicked={onInstructionsClicked} classNames="step-button" showQuestionMark={true} />
                     </div>
                     <div className="col-4">
                         <StepsComponent step={step} setStep={setStep} allowedStep={allowedStep} componentId="task" />
