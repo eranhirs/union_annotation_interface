@@ -5,13 +5,13 @@ import { ExampleData } from './models.jsx';
 // Example 1
 const example1Step3Extra = <section>
     Highlights explanation:
-    <br/> a. The information that "Robbers crash 4x4 into store" is new information and should be highlighted.
-    <br/> b. The information that "Robbers" were "grabbing jewelry and watches , before setting car ablaze", conveys the same information included in sentence 1, and should <span className="fw-bold">not</span> be highlighted.
+    <br/> a. The information that <span className="data-citation">Robbers crash 4x4 into store</span> is new information and should be highlighted.
+    <br/> b. The information that <span className="data-citation">Robbers</span> were <span className="data-citation">grabbing jewelry and watches , before setting car ablaze</span>, conveys the same information included in sentence 1, and should <span className="fw-bold">not</span> be highlighted.
     <br/><br/>
     We should notice a few things:
-    <br/>a. You might think that "Robbers" and "store" were already mentioned in Sentence 1 and hence are not new. However, we are highlighting pieces of information and not words: the information that the "Robbers" were those that crashed is new, and the fact that the crash was "into store" is new, so they are part of the highlight.
-    Hypothetically, if both sentences mentioned a "big store" instead of simply mentioning a "store", we would not highlight the word "big", because this is not part of the new crash information.
-    <br/>b. The word "store" is also highlighted in sentence 1 to help you notice that this word is not new. However, the word "thieves" was not highlighted in sentence 1, because we are using exact match and we don't catch everything.
+    <br/>a. You might think that <span className="data-citation">Robbers</span> and <span className="data-citation">store</span> were already mentioned in Sentence 1 and hence are not new. However, we are highlighting pieces of information and not words: the information that the <span className="data-citation">Robbers</span> were those that crashed is new, and the fact that the crash was <span className="data-citation">into store</span> is new, so they are part of the highlight.
+    Hypothetically, if both sentences mentioned a <span className="data-citation">big store</span> instead of simply mentioning a <span className="data-citation">store</span>, we would not highlight the word <span className="data-citation">big</span>, because this is not part of the new crash information.
+    <br/>b. The word <span className="data-citation">store</span> is also highlighted in sentence 1 to help you notice that this word is not new. However, the word <span className="data-citation">thieves</span> was not highlighted in sentence 1, because we are using exact match and we don't catch everything.
 </section>
 
 
@@ -43,28 +43,34 @@ const example1 = new ExampleData(
     null,    
     "In this example, we chose Sentence 1.",
     example1Step3Extra,
-    <span>In this example, we attached "crashing 4x4 into store" into the description of the thieves actions.<br/><br/>
+    <span>In this example, we attached <span className="data-citation">crashing 4x4 into store</span> into the description of the thieves actions.<br/><br/>
     We should notice a few things:
     <br/> a. The words that were copied as-is are now {fullHighlightTooltip}.
-    <br/> b. The word "crash" was rephrased to "crashing", which is why it is still {highlightTooltip}. You should rephrase only if necessary to make the sentence grammatical or fluent.
-    <br/> c. The word "Robbers" was not used, because it doesn't provide new information over "thieves".
+    <br/> b. The word <span className="data-citation">crash</span> was rephrased to <span className="data-citation">crashing</span>, which is why it is still {highlightTooltip}. You should rephrase only if necessary to make the sentence grammatical or fluent.
+    <br/> c. The word <span className="data-citation">Robbers</span> was not used, because it doesn't provide new information over <span className="data-citation">thieves</span>.
     <br/><br/>The system will raise a warning if it sees {highlightTooltip} highlights, but it is safe to ignore under the circumstances above.
-    </span>
+    </span>,
+    4,
+    false,
+    "Some feedback text",
+    "eran",
+    "master_set_1",
+    "example"
 );
 
 // Example 2
 
 const example2Step3Extra = <section> In this example:
     <dl className="row">
-        <dt className="col-sm-4">* "H-P announced that it will buy"</dt>
+        <dt className="col-sm-4">* <span className="data-citation">H-P announced that it will buy</span></dt>
         <dd className="col-sm-8">Conveys the same information as sentence 1, do <span className="fw-bold">not</span> highlight.</dd>
 
-        <dt className="col-sm-4">* "the outsourcing services company"</dt>
+        <dt className="col-sm-4">* <span className="data-citation">the outsourcing services company</span></dt>
         <dd className="col-sm-8">This is new information, you should highlight it.</dd>
 
 
-        <dt className="col-sm-4">* "for $ 13.9 billion"</dt>
-        <dd className="col-sm-8">This is more specific than "nearly $14 billion", so you should highlight it and replace it in the text.</dd>
+        <dt className="col-sm-4">* <span className="data-citation">for $ 13.9 billion</span></dt>
+        <dd className="col-sm-8">This is more specific than <span className="data-citation">nearly $14 billion</span>, so you should highlight it and replace it in the text.</dd>
     </dl>
 </section>
 
@@ -92,15 +98,21 @@ const example2 = new ExampleData(
     null,    
     "In this example, we chose Sentence 2.",
     example2Step3Extra,
-    'In this example, we replace "nearly $ 14 billion" with "$ 13.9 billion". Also, we add "the outsourcing services company".'
+    'In this example, we replace "nearly $ 14 billion" with "$ 13.9 billion". Also, we add "the outsourcing services company".',
+    null,
+    null,
+    null,
+    null,
+    null,
+
 );
 
 // Example 3
 
 const example3Step3Extra = <section> In this example:
     <dl className="row">
-        <dt className="col-sm-3">* "of 13"</dt>
-        <dd className="col-sm-9">This phrase contradicts with the "of 12" phrase in the other sentence. Such contradicting examples will automatically end the task, so there is no need to continue further.</dd>
+        <dt className="col-sm-3">* <span className="data-citation">of 13</span></dt>
+        <dd className="col-sm-9">This phrase contradicts with the <span className="data-citation">of 12</span> phrase in the other sentence. Such contradicting examples will automatically end the task, so there is no need to continue further.</dd>
     </dl>
 </section>
 
@@ -182,9 +194,9 @@ const example5 = new ExampleData(
     "In this example, we chose Sentence 1.",
     <span>
         We should notice a few things:
-        <br/>a. At first glance, it seems we should highlight "4G LTE smartphone portfolio", because it is more specific than "4G LTE devices". However, Sentence 1 later mentions BlackBerry which is more specific than smartphone, so the phrase "4G LTE smartphone portfolio" doesn't actually add new information to the base sentence and highlighting it would be a mistake.
-        <br/>b. "T - mobile" is also highlighted, even though it is already mentioned in Sentence 1. Highlighting only "today announced" would be a mistake, because the fact that T-mobile announced is new (we are highlighting information, not words).
-        <br/>c. "that the blackberry Q10 ..." is not highlighted. It is not new, and it is a separated clause from the announcement, so it should <b>not</b> be highlighted.
+        <br/>a. At first glance, it seems we should highlight <span className="data-citation">4G LTE smartphone portfolio</span>, because it is more specific than <span className="data-citation">4G LTE devices</span>. However, Sentence 1 later mentions BlackBerry which is more specific than smartphone, so the phrase <span className="data-citation">4G LTE smartphone portfolio</span> doesn't actually add new information to the base sentence and highlighting it would be a mistake.
+        <br/>b. <span className="data-citation">T - mobile</span> is also highlighted, even though it is already mentioned in Sentence 1. Highlighting only <span className="data-citation">today announced</span> would be a mistake, because the fact that T-mobile announced is new (we are highlighting information, not words).
+        <br/>c. <span className="data-citation">that the blackberry Q10 ...</span> is not highlighted. It is not new, and it is a separated clause from the announcement, so it should <b>not</b> be highlighted.
     </span>,
     null,
     4
@@ -264,9 +276,9 @@ const example6 = new ExampleData(
     null,
     <span>
         We should notice a few things about the merged sentence:
-        <br/>a. "Three or four robbers" is new and is attached to the description of the band.
-        <br/>b. "on ritzy Avenue ..." is attached to the "city's golden triangle of luxury shops" in such a way that the description of the location is adjacent. Attaching it to the end of the sentence would be considered incoherent.
-        <br/>c. "necklaces" is a new item attached to the list of stolen items. This is allowed only because it seems both sentences describe a list of the same stolen items.
+        <br/>a. <span className="data-citation">Three or four robbers</span> is new and is attached to the description of the band.
+        <br/>b. <span className="data-citation">on ritzy Avenue ...</span> is attached to the <span className="data-citation">city's golden triangle of luxury shops</span> in such a way that the description of the location is adjacent. Attaching it to the end of the sentence would be considered incoherent.
+        <br/>c. <span className="data-citation">necklaces</span> is a new item attached to the list of stolen items. This is allowed only because it seems both sentences describe a list of the same stolen items.
     </span>,
     4
 );

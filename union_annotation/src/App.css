@@ -199,3 +199,17 @@
 .feedback-textarea {
     width: 100%;
 }
+
+/* Used to differentiate data from other texts */
+.data-text, .data-citation {
+    font-family: Roboto;
+    font-size: 1.4rem;
+}
+
+.data-citation::before {
+    content: "\"";
+}
+
+.data-citation::after {
+    content: "\"";
+}

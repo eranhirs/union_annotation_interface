@@ -122,6 +122,7 @@ function MergeSentencesStep({ taskData, mergedText, setMergedText, highlightedPh
     const mergedSentenceTextArea = <section>
         <h5 className="card-title">Merged sentence</h5>
         {!skipped && <textarea
+            className="data-text"
             onChange={(e) => setMergedText(e.target.value)}
             placeholder="Please complete here the merged sentence"
             value={mergedText}

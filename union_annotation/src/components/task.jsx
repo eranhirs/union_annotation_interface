@@ -17,14 +17,19 @@ import { FeedbackComponent } from './feedback_component.jsx';
 function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const { sentence1Text, sentence2Text } = taskData;
     const [step, setStep] = useState(1);
-    const [allowedStep, setAllowedStep] = useState(2);
-    const [chosenSentenceId, setChosenSentenceId] = useState(null);
-    const [highlightedPhrases, setHighlightedPhrases] = useState([]);
+    const [allowedStep, setAllowedStep] = useState(taskData['mergedSentenceText'] || 2);
+    const [chosenSentenceId, setChosenSentenceId] = useState(taskData['chosenSentenceId'] || null);
+    const [highlightedPhrases, setHighlightedPhrases] = useState(taskData['highlightedPhrases'] || null);
     const [skipped, setSkipped] = useState(false);
     const lastStep = 4;
 
-    const [ mergedText, setMergedText ] = useState("");
-    const [ feedbackText, setFeedbackText ] = useState("");    
+    const [ mergedText, setMergedText ] = useState(taskData['mergedSentenceText'] || "");
+    const [ feedbackText, setFeedbackText ] = useState(taskData['feedbackText'] || "");
+    // When retagging, original annotator is used to show who annotated
+    const [ originalAnnotator, setOriginalAnnotator ] = useState(taskData['originalAnnotator']);
+    const [ originalAnnotationIteration, setOriginalAnnotationIteration ] = useState(taskData['annotationIteration']);
+    const [ reviewStatus, setReviewStatus ] = useState(taskData['reviewStatus']);
+    const [ originalSkip, setOriginalSkip ] = useState(taskData['skipped']);
 
     function setChosenSentenceIdAnResetNextSteps(currSentenceId) {
         if (currSentenceId != chosenSentenceId) {
@@ -222,6 +227,14 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
                 </div>
                 {submitValidationModalComponent}
                 {skipValidationModalComponent}
+                <div className="row">
+                    <div className="annotated-by-text">{originalAnnotator ? `Previously annotated by: ${originalAnnotator}` : ""}</div>
+                    <div className="annotated-by-text">{originalAnnotationIteration ? `Annotation iteration: ${originalAnnotationIteration}` : ""}</div>
+                    <div className="annotated-by-text">{reviewStatus ? `Review status: ${reviewStatus}` : ""}</div>
+                    <div className="annotated-by-text">{originalSkip != undefined ? `Was previously skipped: ${originalSkip}` : ""}</div>
+
+                </div>
+
             </div>
         </div>
     );
