@@ -90,7 +90,7 @@ function HighlightPhrasesStep({ taskData, chosenSentenceId, highlightedSentenceI
     }
     
     const highlightedPhrasesListComponent = <section className="highlighted-phrases-list">Highlighted phrases: {highlightedPhrases.length > 0 && highlightedPhrases.map(function(object, i) {
-            return <span className="highlighted-phrase-list-component highlight " onClick={() => removeHighlightedPhrase(object)}><HighlightTooltip text={<span>{object['phrase']} <span className="trash-icon">{trashIcon}</span></span>} tooltipText="Click to delete the highlight" /></span>
+            return <span className="highlighted-phrase-list-component highlight data-text" onClick={() => removeHighlightedPhrase(object)}><HighlightTooltip text={<span>{object['phrase']} <span className="trash-icon">{trashIcon}</span></span>} tooltipText="Click to delete the highlight" /></span>
         }).reduce((prev, curr) => [prev, ", ", curr])}</section>
 
 

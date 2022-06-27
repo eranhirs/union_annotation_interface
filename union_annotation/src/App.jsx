@@ -5,9 +5,11 @@ import { examples } from "./examples.jsx";
 import { Task } from './components/task';
 import MTurkComponent from './components/mturk_component';
 
-function App() {  
+function App() {
+  let someExample = examples[0]
+  
   return (
-    <MTurkComponent defaultTaskData={examples[0]}>
+    <MTurkComponent defaultTaskData={someExample}>
       <Task
         isOnboarding={false}
         onError={() => { }}

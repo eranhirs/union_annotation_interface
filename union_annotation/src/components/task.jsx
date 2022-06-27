@@ -13,11 +13,12 @@ import { fullMatchDescription, highlightTooltip, noMatchDescription } from './te
 import { findAllInText, phraseToWords } from '../utils.jsx';
 import { InstructionsButton, SkipButton, SubmitButton } from './buttons.jsx';
 import { FeedbackComponent } from './feedback_component.jsx';
+import { Alert } from 'react-bootstrap';
 
 function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const { sentence1Text, sentence2Text } = taskData;
     const [step, setStep] = useState(1);
-    const [allowedStep, setAllowedStep] = useState(taskData['mergedSentenceText'] || 2);
+    let [allowedStep, setAllowedStep] = useState(taskData['mergedSentenceText'] ? 4 : 2);
     const [chosenSentenceId, setChosenSentenceId] = useState(taskData['chosenSentenceId'] || null);
     const [highlightedPhrases, setHighlightedPhrases] = useState(taskData['highlightedPhrases'] || null);
     const [skipped, setSkipped] = useState(false);
@@ -115,6 +116,7 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const highlightedPhrasesCopy = markHighlightedPhrasesAsMerged(mergedText, highlightedPhrases)
 
     const highlightsNotIntegrated = highlightedPhrasesCopy.filter((highlightedPhrases) => highlightedPhrases['status'] == 'not-integrated')
+    const highlightsWithoutStartOrEndExist = highlightedPhrasesCopy.filter((highlightPhrases) => isNaN(highlightPhrases['start']) || isNaN(highlightPhrases['end']))
     const noHighlights = highlightedPhrasesCopy.length === 0
     const mergedSentenceUnchanged = mergedText == sentence1Text || mergedText == sentence2Text
 
@@ -122,10 +124,11 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
     const isMergedTextEmpty = !skipped && mergedText.trim() == "";
     const isMergedSentenceUnchanged = !skipped && mergedSentenceUnchanged
     const isAllHighlightsIntegrated = !skipped && highlightsNotIntegrated.length > 0
+    const isAllHighlightsWithStartAndEnd = !skipped && highlightsWithoutStartOrEndExist.length > 0
     const isSentenceChangedButNoHighlights = !skipped && noHighlights && !mergedSentenceUnchanged
     const isFeedbackEmpty = feedbackText.trim() == ""
-    const isSubmitDisabled = isFeedbackEmpty && (isMergedTextEmpty || isMergedSentenceUnchanged || isSentenceChangedButNoHighlights || skipped)
-    const shouldShowValidationModal = isMergedTextEmpty || isMergedSentenceUnchanged || isSentenceChangedButNoHighlights || isAllHighlightsIntegrated
+    const isSubmitDisabled = isFeedbackEmpty && (isMergedTextEmpty || isMergedSentenceUnchanged || isSentenceChangedButNoHighlights || isAllHighlightsWithStartAndEnd || skipped)
+    const shouldShowValidationModal = isMergedTextEmpty || isMergedSentenceUnchanged || isSentenceChangedButNoHighlights || isAllHighlightsIntegrated || isAllHighlightsWithStartAndEnd
 
 
     const submitValidationModalComponent = <div className="modal fade" ref={modalRef} id="submitValidationModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="submitValidationModelLabel" aria-hidden="true">
@@ -141,6 +144,7 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
                 {isMergedSentenceUnchanged && <section>You are trying to submit the base sentence without adding any information to it from the other sentence. This is possible only if the information in the former completely contains the information in the latter. <br/><br/></section>}
                 {isSentenceChangedButNoHighlights && <section>You made changes to the base sentence but you didn't use the highlighting tool, please go back to Step 3. <br/><br/></section>}
                 {isAllHighlightsIntegrated && <section>Some of your highlights could not be found in the merged sentence (colored {highlightTooltip}). You should remove unused highlights, unless you think we couldn't find them automatically (for example, if you rephrased the highlighted word). <br/><br/></section>}
+                {isAllHighlightsWithStartAndEnd && <section>Some highlights are malformed, please go to step 3, delete the highlights and make the same highlights again. <br/><br/></section>}
                 {isSubmitDisabled && <section>Submit disabled. While this use case is allowed, you have to provide feedback explaining your decision.</section>}
                 {!isSubmitDisabled && <section>You can submit, but please carefully read the instructions beforehand if you are uncertain about this warning.</section>}
             </div>
@@ -193,6 +197,9 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
         instructionsModal.toggle()
     }
 
+    if (allowedStep == 4 && isAllHighlightsWithStartAndEnd) {
+        allowedStep = 3
+    }
     
 
     // we are highlighting the other than the chosen sentence
@@ -208,6 +215,7 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
                 {step == "1" && <ReadSentencesStep taskData={taskData} showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions} onInstructionsClicked={onInstructionsClicked} />}
                 {step == "2" && <ChooseSentenceStep taskData={taskData} setStep={setStep} setAllowedStep={setAllowedStep} chosenSentenceId={chosenSentenceId} setChosenSentenceId={setChosenSentenceIdAnResetNextSteps} />}
                 {step == "3" && <HighlightPhrasesStep taskData={taskData} chosenSentenceId={chosenSentenceId} highlightedSentenceId={highlightedSentenceId} highlightedPhrases={highlightedPhrases} setHighlightedPhrases={setHighlightedPhrases}  showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}  />}
+                {step == "3" && isAllHighlightsWithStartAndEnd && <Alert variant="danger">Please delete and recreate the highlights.</Alert>}
                 {step == "4" && <MergeSentencesStep taskData={taskData} mergedText={mergedText} setMergedText={setMergedText} highlightedPhrases={highlightedPhrasesCopy} chosenSentenceId={chosenSentenceId} feedbackText={feedbackText} setFeedbackText={setFeedbackText} skipped={skipped} setSkipped={setSkipped}  showReadInstructions={showReadInstructions} setShowReadInstructions={setShowReadInstructions}  />}
 
                 <div className="row">

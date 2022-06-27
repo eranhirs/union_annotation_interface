@@ -53,6 +53,11 @@
     border: 1px #767676 solid;
     padding: 5px;
  }
+
+ /* Match the padding of the other sentences */
+ .merge-sentences-step textarea {
+    padding: 5px;
+ }
  
   /* Disabled functionality for the highlighter class */
   .sentence .disabled {
