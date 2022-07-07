@@ -181,14 +181,16 @@ function Task({ taskData, isOnboarding, onSubmit, onError }) {
 
     function onSubmitClicked(submissionData, skip=false) {
         if (skip == false) {
-            submissionData.skipped = false;
+            submissionData.skipped = false;  // Update because submission is already initialized
+            setSkipped(false);  // Update in case submission changes (e.g., feedback added)
             if (shouldShowValidationModal) {
                 submitValidationModal.toggle()
             } else {
                 onSubmitWithLog(submissionData)
             }
         } else {
-            submissionData.skipped = true;
+            submissionData.skipped = true;  // Update because submission is already initialized
+            setSkipped(true);  // Update in case submission changes (e.g., feedback added)
             skipValidationModal.toggle()
         }
     }
